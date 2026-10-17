@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, follow">
+  <title>AI 工具箱 — Sumtez</title>
+</head>
+<body>
+  <p>正在打开AI 工具箱。<a id="continue" href="../tools.html">点击继续</a></p>
+  <noscript><p>浏览器未启用 JavaScript，请点击上方链接打开页面。</p></noscript>
+  <script>
+    const destination = new URL(window.location.href);
+    destination.pathname = destination.pathname.replace(/\/tools(?:\/(?:index\.html)?)?$/, '/tools.html');
+    document.getElementById('continue').href = destination.href;
+    window.location.replace(destination.href);
+  </script>
+</body>
+</html>
