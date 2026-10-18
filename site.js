@@ -3,7 +3,7 @@
   if (year) year.textContent = new Date().getFullYear();
   const links = [...document.querySelectorAll('.header nav a')];
   if (location.pathname.endsWith('tools.html')) return;
-  const current = location.pathname.endsWith('ainovel.html') ? '#work' : location.pathname.endsWith('guide.html') ? '#guides' : null;
+  const current = ['ainovel.html', 'declaration.html', 'bl-reco.html', 'edi-agent.html', 'cloud-agent.html', 'codegen-verify.html'].some(page => location.pathname.endsWith(page)) ? '#work' : location.pathname.endsWith('guide.html') ? '#guides' : null;
   if (current) { links.find(link => link.hash === current)?.setAttribute('aria-current', 'page'); return; }
   if (!('IntersectionObserver' in window)) return;
   const observer = new IntersectionObserver(entries => {
