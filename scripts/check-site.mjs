@@ -156,18 +156,9 @@ if (featured !== 16) fail(toolsFile, `expected 16 featured tools, found ${featur
 
 const indexFile = path.join(root, 'index.html');
 const home = pages.get(indexFile);
-const collectionFile = path.join(root, 'work.html');
-const cataloguePage = pages.get(collectionFile);
-if (!cataloguePage) fail(collectionFile, 'missing the work index page');
-const hasCollectionEntry = home?.nodes.some(node => {
-  if (node.tag !== 'a' || !readable(node) || !node.attrs.href) return false;
-  try { return localTarget(node.attrs.href, indexFile) === collectionFile; }
-  catch { return false; }
-});
-if (!hasCollectionEntry) fail(indexFile, 'landing page requires a readable static link to work.html');
-const collection = cataloguePage?.nodes.find(node => node.attrs.id === 'published-products');
-const cards = collection ? cataloguePage.nodes.filter(node => node.tag === 'article' && within(node, collection) && readable(node)) : [];
-if (cards.length !== 6) fail(collectionFile, `expected 6 readable static product articles in #published-products, found ${cards.length}`);
+const collection = home?.nodes.find(node => node.attrs.id === 'published-products');
+const cards = collection ? home.nodes.filter(node => node.tag === 'article' && within(node, collection) && readable(node)) : [];
+if (cards.length !== 6) fail(indexFile, `expected 6 readable static product articles in #published-products, found ${cards.length}`);
 const productTargets = new Set();
 const matchedCards = new Set();
 for (const product of products) {
@@ -176,27 +167,27 @@ for (const product of products) {
     continue;
   }
   try {
-    const target = localTarget(product.detailUrl, collectionFile);
+    const target = localTarget(product.detailUrl, indexFile);
     if (!target || !/\.html$/i.test(target) || !isFile(target)) {
       fail(contentFile, `${product.title}: missing local HTML product page ${product.detailUrl}`);
       continue;
     }
     if (productTargets.has(target)) fail(contentFile, `duplicate product detailUrl: ${product.detailUrl}`);
     productTargets.add(target);
-    const matches = cards.filter(card => cataloguePage.nodes.some(node => node.tag === 'a' && readable(node) && within(node, card) &&
-      node.attrs.href && localTarget(node.attrs.href, collectionFile) === target));
-    if (matches.length !== 1) { fail(collectionFile, `${product.title}: expected one static card linking to ${product.detailUrl}, found ${matches.length}`); continue; }
+    const matches = cards.filter(card => home.nodes.some(node => node.tag === 'a' && readable(node) && within(node, card) &&
+      node.attrs.href && localTarget(node.attrs.href, indexFile) === target));
+    if (matches.length !== 1) { fail(indexFile, `${product.title}: expected one static card linking to ${product.detailUrl}, found ${matches.length}`); continue; }
     const card = matches[0];
     matchedCards.add(card);
-    if (!cataloguePage.nodes.some(node => /^h[2-6]$/.test(node.tag) && within(node, card) && normalize(visibleText(node)) === normalize(product.title))) {
-      fail(collectionFile, `${product.title}: static card heading does not match content.js`, card.line);
+    if (!home.nodes.some(node => /^h[2-6]$/.test(node.tag) && within(node, card) && normalize(visibleText(node)) === normalize(product.title))) {
+      fail(indexFile, `${product.title}: static card heading does not match content.js`, card.line);
     }
-    // The work index intentionally omits descriptive copy; validate it if rendered.
-    const summary = cataloguePage.nodes.find(node => within(node, card) && (node.attrs.class || '').split(/\s+/).includes('future-project-summary'));
-    if (summary && !normalize(visibleText(summary)).includes(normalize(product.summary))) fail(collectionFile, `${product.title}: static summary is stale`, card.line);
+    // The homepage intentionally omits descriptive copy; validate it if rendered.
+    const summary = home.nodes.find(node => within(node, card) && (node.attrs.class || '').split(/\s+/).includes('future-project-summary'));
+    if (summary && !normalize(visibleText(summary)).includes(normalize(product.summary))) fail(indexFile, `${product.title}: static summary is stale`, card.line);
   } catch (error) { fail(contentFile, `${product.title}: ${error.message}`); }
 }
-if (matchedCards.size !== 6) fail(collectionFile, `only ${matchedCards.size} distinct static cards match the product catalogue`);
+if (matchedCards.size !== 6) fail(indexFile, `only ${matchedCards.size} distinct static cards match the product catalogue`);
 
 console.log(`Checked ${relative(root) || root}: ${pages.size} HTML pages, ${localReferences} local src/href references, ${products.length} products, ${tools.length} tools (${featured} featured).`);
 for (const note of notes) console.log(`NOTE: ${note}`);
@@ -205,6 +196,6 @@ if (errors.length) {
   console.error(`${errors.length} static regression issue(s). No files were changed.`);
   process.exitCode = 1;
 } else {
-  console.log('PASS: static links, document basics, landing entry, catalogue counts and six no-JavaScript product cards in work.html are consistent.');
+  console.log('PASS: static links, document basics, catalogue counts and six no-JavaScript product cards are consistent.');
 }
 console.log('Scope: local files and static HTML only; no network requests, CSS visibility/layout, or browser runtime checks.');

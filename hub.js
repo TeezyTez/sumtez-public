@@ -22,13 +22,13 @@
   const guide = guides.find(item => item.id === new URLSearchParams(location.search).get('guide'));
   if (!guide) {
     document.title = '未找到指南 — Sumtez';
-    article.append(el('h1', '这篇指南还没有收录'), el('p', '从指南列表选择一篇，开始新的实践。'), link('返回使用指南 ↗', 'work.html#guides', 'button primary'));
+    article.append(el('h1', '这篇指南还没有收录'), el('p', '从指南列表选择一篇，开始新的实践。'), link('返回使用指南 ↗', 'index.html#guides', 'button primary'));
     return;
   }
   document.title = `${guide.title} — Sumtez 使用指南`;
   const canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = `https://sumtez.com/${guideUrl(guide.id)}`; document.head.append(canonical);
   document.querySelector('meta[name="description"]').content = guide.summary;
-  article.append(link('← 返回使用指南', 'work.html#guides', 'text-link guide-back'), el('p', `${guide.category} / ${guide.minutes}`, 'eyebrow muted'), el('h1', guide.title), el('p', guide.intro, 'guide-intro'));
+  article.append(link('← 返回使用指南', 'index.html#guides', 'text-link guide-back'), el('p', `${guide.category} / ${guide.minutes}`, 'eyebrow muted'), el('h1', guide.title), el('p', guide.intro, 'guide-intro'));
   const outcome = el('div', '', 'guide-outcome'); outcome.append(el('strong', '完成后，你会得到'), el('p', guide.outcome)); article.append(outcome);
   const savedSteps = state.read(`steps:${guide.id}`, []);
   const completed = new Set(Array.isArray(savedSteps) ? savedSteps.filter(i => Number.isInteger(i) && i >= 0 && i < guide.steps.length) : []);

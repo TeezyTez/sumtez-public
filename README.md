@@ -2,22 +2,22 @@
 
 Sumtez 的公开个人网站，包含首页、作品介绍、AI 工具箱与使用指南。
 
-## 当前版本 · 2026-10-24
+## 当前版本 · 2026-11-04
 
-首页为可暂停的动态线条画布，提供静态作品入口；尊重减少动态效果设置，并在页面隐藏时暂停。`work.html` 展示 6 个真实项目、工具与实践笔记，产品介绍、工具筛选收藏和指南继续保留在独立页面。
+恢复浅色背景、黑色项目标题的版本，与 Sites 发布版本 15（源码提交 `90c6679`）同步。首页保留扫描线签名动效，6 个项目采用等宽双栏、统一字号和间距，手机上显示为单列。
 
-- `index.html`、`landing.css`、`landing.js`：首页与动效。
-- `work.html`、`home.css`、`identity.css`：作品目录与统一视觉。
-- `fonts/`：本地 Instrument Sans 字体及 OFL 许可证。
-- `docs/research/2026-10-24-open-field-verification.md`：本版本的验证记录；下方历史改版记录保留供参考。
+- `index.html`、`home.css`、`home-motion.js`：首页、项目目录与签名动效。
+- `work.html`：兼容旧作品目录地址，跳转到首页并保留查询参数与锚点。
+- 产品介绍、工具筛选收藏和指南保持独立入口。
 
-修改后运行以下命令，生成静态页面并检查本地链接、项目目录及动效行为，无需安装依赖：
+修改后运行以下命令，生成静态页面并检查本地链接及项目目录，无需安装依赖：
 
 ```sh
 node scripts/build-product-pages.mjs
 node scripts/check-site.mjs
-node scripts/check-landing-motion.mjs
 ```
+
+已完成静态链接、文档结构、项目数量及代码审查。最终黑字版本的浏览器截图未重新验证，因为浏览器控制工具当时不可用。下方历史改版记录仅供参考。
 
 ## 部署到 GitHub Pages
 
@@ -39,7 +39,7 @@ node scripts/check-landing-motion.mjs
 | 智能体任务工作台 | [Cloud-Agent-Platform](https://github.com/TeezyTez/Cloud-Agent-Platform) | [产品介绍](cloud-agent.html) |
 | 规约驱动代码生成 | [codegen-verify](https://github.com/TeezyTez/codegen-verify) | [产品介绍](codegen-verify.html) |
 
-`content.js` 管理公开产品文案。修改后运行 `node scripts/build-product-pages.mjs`，同步生成 5 个产品介绍页与 `work.html` 静态作品卡片，并自动更新 CSS/JS 的内容版本；ainovel 介绍页单独维护。运行生成器后提交生成的 HTML 文件，无需安装依赖。
+`content.js` 管理公开产品文案。修改后运行 `node scripts/build-product-pages.mjs`，同步生成 5 个产品介绍页与 `index.html` 静态作品卡片，并自动更新 CSS/JS 的内容版本；ainovel 介绍页单独维护。运行生成器后提交生成的 HTML 文件，无需安装依赖。
 
 资料于 2026-10-18 按 README 与关键代码核对；每项保留原型/MVP/研究阶段标签，提供源码入口。这里是产品展示网站，没有部署各产品后端，也未复制客户样本或环境配置。
 
