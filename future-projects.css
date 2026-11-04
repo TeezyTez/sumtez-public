@@ -1,0 +1,205 @@
+/* A quiet, asymmetric collection. Load after products.css. */
+#published-products {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
+  gap: 68px 36px;
+}
+.future-project {
+  --project-ink: #343e4b;
+  --project-muted: #596574;
+  --project-silver: #8191a8;
+  min-width: 0;
+  grid-column: span 5;
+  color: var(--project-ink);
+  font-family: var(--sans);
+  font-weight: 400;
+}
+.future-project--featured { grid-column: span 8; }
+.future-project--declaration { grid-column: span 4; margin-top: 60px; }
+.future-project--edi-agent { grid-column: span 7; margin-top: 60px; }
+.future-project--cloud-agent { grid-column: span 7; }
+.future-project--codegen-verify { margin-top: 60px; }
+.future-project-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1.3;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e7ebf0;
+  color: var(--project-silver);
+  text-decoration: none;
+}
+.future-project--featured .future-project-art {
+  aspect-ratio: 1.65;
+  padding: 30px 30px 46px;
+  background: #dfe4eb;
+}
+.future-project--declaration .future-project-art { aspect-ratio: .98; background: #f7f8fa; }
+.future-project--edi-agent .future-project-art { aspect-ratio: 1.65; background: #f7f8fa; }
+.future-project--cloud-agent .future-project-art { aspect-ratio: 1.65; background: #dfe4eb; }
+.future-project--codegen-verify .future-project-art { background: #f7f8fa; }
+.future-project-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  filter: saturate(.78);
+  box-shadow: 0 8px 28px #34405212;
+}
+.future-project-caption {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  z-index: 2;
+  color: #606d7d;
+  font: 400 10px/1.5 var(--sans);
+  letter-spacing: .06em;
+}
+.future-project-copy { padding: 24px 2px 0; }
+.future-project-meta {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  margin-bottom: 12px;
+  color: var(--project-muted);
+  font: 400 10px/1.6 var(--sans);
+  letter-spacing: .06em;
+}
+.future-project-meta > :first-child { color: #62748c; font-variant-numeric: tabular-nums; }
+.future-project h3 {
+  margin: 0 0 13px;
+  color: var(--project-ink);
+  font: 400 clamp(20px, 2.15vw, 26px)/1.45 var(--sans);
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.future-project h3 a { color: inherit; text-decoration: none; }
+.future-project-summary {
+  max-width: 45em;
+  margin: 0;
+  color: var(--project-muted);
+  font: 400 13px/1.9 var(--sans);
+  text-wrap: pretty;
+}
+.future-project-status {
+  margin: 14px 0 0;
+  color: var(--project-muted);
+  font: 400 10px/1.7 var(--sans);
+}
+.future-project-links { display: flex; gap: 24px; margin-top: 14px; }
+.future-project-links a {
+  display: inline-flex;
+  min-height: 32px;
+  gap: 12px;
+  align-items: center;
+  color: var(--project-ink);
+  font: 400 11px/1.5 var(--sans);
+  text-decoration: none;
+  text-underline-offset: 5px;
+}
+.future-project-links a:hover, .future-project h3 a:hover { text-decoration: underline; }
+.future-project a:focus-visible { outline: 2px solid #526b8a; outline-offset: 5px; }
+.future-project-composition { position: absolute; inset: 0; }
+.future-project-composition *, .future-project-composition *::before, .future-project-composition *::after { box-sizing: border-box; }
+
+/* 02 — a question between fragments of a body of knowledge. */
+.future-knowledge-disc {
+  position: absolute;
+  width: 63%;
+  aspect-ratio: 1;
+  top: 17%;
+  left: 17%;
+  border: 1px solid #8191a833;
+  border-radius: 50%;
+}
+.future-knowledge-disc::after { content: ""; position: absolute; inset: 11px; border: 1px solid #8191a814; border-radius: inherit; }
+.future-knowledge-paper {
+  position: absolute;
+  width: 34%;
+  height: 43%;
+  top: 28%;
+  left: 34%;
+  background: #ffffffa6;
+  border: 1px solid #8191a826;
+  box-shadow: 7px 12px 28px #35445a08;
+}
+.future-knowledge-paper--back { transform: translate(-14px, -9px) rotate(-13deg); background: #e7ebf0b3; }
+.future-knowledge-paper--front { transform: rotate(9deg); padding: 6% 5%; }
+.future-knowledge-paper--front span { display: block; margin-bottom: 18%; color: #8191a8; font: 400 36px/1 var(--sans); }
+.future-knowledge-paper--front i { display: block; width: 100%; height: 1px; margin-top: 10px; background: #8191a84d; }
+.future-knowledge-paper--front i:last-child { width: 65%; }
+.future-knowledge-point { position: absolute; width: 5px; height: 5px; top: 27%; left: 74%; border-radius: 50%; background: #8191a8; }
+
+/* 03 — a vertical plane separates the document from its traces. */
+.future-extract-grid {
+  position: absolute;
+  inset: 16% 14% 20%;
+  opacity: .45;
+  background-image: linear-gradient(#8191a81c 1px, transparent 1px), linear-gradient(90deg, #8191a81c 1px, transparent 1px);
+  background-size: 29px 29px;
+  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 75%, transparent);
+}
+.future-extract-page { position: absolute; width: 29%; height: 55%; left: 24%; top: 21%; padding: 9% 5%; border: 1px solid #8191a83b; background: #f7f8fa99; transform: rotate(-4deg); }
+.future-extract-page i { display: block; height: 1px; margin-bottom: 14%; background: #8191a84d; }
+.future-extract-page i:nth-child(3n) { width: 62%; }
+.future-extract-beam { position: absolute; left: 57%; top: 15%; width: 1px; height: 64%; background: #8191a899; box-shadow: -9px 0 19px 5px #8191a818; }
+.future-extract-beam::before, .future-extract-beam::after { content: ""; position: absolute; left: -3px; width: 7px; height: 1px; background: #8191a8; }
+.future-extract-beam::after { bottom: 0; }
+.future-extract-fragments { position: absolute; left: 63%; top: 33%; width: 16%; height: 35%; }
+.future-extract-fragments i { display: block; height: 2px; margin: 0 0 24%; background: #8191a877; }
+.future-extract-fragments i:nth-child(2) { width: 60%; margin-left: 13%; }
+.future-extract-fragments i:nth-child(3) { width: 80%; margin-left: 28%; }
+.future-extract-fragments i:nth-child(4) { width: 45%; }
+
+/* 04 / 05 — mapping is a set of threads; orchestration is a constellation. */
+.future-mapping-threads, .future-agent-nodes { position: absolute; width: 100%; height: 100%; inset: 0; }
+.future-mapping-threads { stroke: #8191a8; stroke-width: 1; }
+.future-thread-faint { opacity: .18; }
+.future-thread-fine { opacity: .4; }
+.future-thread-ends { fill: #f7f8fa; }
+.future-thread-knot { fill: #e7ebf077; stroke: #8191a833; }
+.future-node-path { stroke: #8191a8; stroke-width: .9; opacity: .45; }
+.future-node-orbit { stroke: #8191a8; stroke-width: .7; opacity: .22; stroke-dasharray: 1 7; }
+.future-node-halo { fill: #f7f8fa66; stroke: #f7f8fa; stroke-width: .7; }
+.future-node-solid { fill: #8191a8; }
+.future-node-core { fill: #f7f8fa; stroke: #8191a8; stroke-width: .8; }
+
+/* 06 — open braces hold the quiet space between a rule and its proof. */
+.future-code-brace { position: absolute; top: 22%; color: #8191a88c; font: 400 clamp(80px, 9vw, 136px)/1 var(--sans); }
+.future-code-brace--left { left: 24%; }
+.future-code-brace--right { right: 24%; }
+.future-code-proof { position: absolute; top: 34%; left: 43%; width: 14%; }
+.future-code-proof i { display: block; height: 1px; margin-bottom: 12px; background: #8191a84d; }
+.future-code-proof i:nth-child(2) { width: 70%; }
+.future-code-proof span { display: block; margin-top: 16px; text-align: center; color: #8191a8; font: 400 24px/1 var(--sans); }
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .future-project-composition { transition: transform 320ms ease; }
+  .future-project-art:hover .future-project-composition { transform: translateY(-4px); }
+}
+@media (max-width: 1000px) {
+  #published-products { column-gap: 26px; row-gap: 54px; }
+  .future-project--featured { grid-column: span 7; }
+  .future-project--declaration { grid-column: span 5; }
+  .future-project--featured .future-project-art { padding: 22px 22px 42px; aspect-ratio: 1.3; }
+}
+@media (max-width: 700px) {
+  #published-products { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  #published-products .future-project { grid-column: 1; margin-top: 0; }
+  #published-products .future-project-art { aspect-ratio: 1.4; }
+  #published-products .future-project--featured .future-project-art { aspect-ratio: 1.3; padding: 20px 20px 42px; }
+  .future-project-copy { padding-top: 20px; }
+  .future-project h3 { font-size: 22px; }
+  .future-project-summary { font-size: 13px; }
+  .future-project-links a { min-height: 44px; }
+  .future-project-caption { left: 16px; }
+  .future-knowledge-disc { width: 48%; top: 11%; left: 26%; }
+  .future-knowledge-paper { width: 25%; height: 53%; left: 39%; top: 22%; }
+  .future-knowledge-paper--front { padding: 5%; }
+  .future-knowledge-point { top: 22%; left: 71%; }
+  .future-code-brace { top: 20%; font-size: 112px; }
+}

@@ -12,8 +12,9 @@
       const meta = el('div', '', 'guide-meta'); meta.append(el('span', guide.category), el('span', '↗'));
       const progress = state.read(`steps:${guide.id}`, []);
       const done = Array.isArray(progress) ? new Set(progress.filter(i => Number.isInteger(i) && i >= 0 && i < guide.steps.length)).size : 0;
-      card.append(meta, el('span', guide.number, 'guide-number'), el('h3', guide.title), el('p', guide.summary), el('span', done ? `已完成 ${done}/${guide.steps.length} 步 · 继续实践 →` : `${guide.minutes} · 可填写提示词`, 'guide-time'));
-      document.querySelector('#guide-grid').append(card);
+      card.append(meta, el('span', guide.number, 'guide-number'), el('h3', guide.title));
+      if (done) card.append(el('span', `已完成 ${done}/${guide.steps.length}`, 'guide-time'));
+      guideGrid.append(card);
     });
   }
   const article = document.querySelector('#guide-article');
@@ -21,13 +22,13 @@
   const guide = guides.find(item => item.id === new URLSearchParams(location.search).get('guide'));
   if (!guide) {
     document.title = '未找到指南 — Sumtez';
-    article.append(el('h1', '这篇指南还没有收录'), el('p', '从指南列表选择一篇，开始新的实践。'), link('返回使用指南 ↗', 'index.html#guides', 'button primary'));
+    article.append(el('h1', '这篇指南还没有收录'), el('p', '从指南列表选择一篇，开始新的实践。'), link('返回使用指南 ↗', 'work.html#guides', 'button primary'));
     return;
   }
   document.title = `${guide.title} — Sumtez 使用指南`;
   const canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = `https://sumtez.com/${guideUrl(guide.id)}`; document.head.append(canonical);
   document.querySelector('meta[name="description"]').content = guide.summary;
-  article.append(link('← 返回使用指南', 'index.html#guides', 'text-link guide-back'), el('p', `${guide.category} / ${guide.minutes}`, 'eyebrow muted'), el('h1', guide.title), el('p', guide.intro, 'guide-intro'));
+  article.append(link('← 返回使用指南', 'work.html#guides', 'text-link guide-back'), el('p', `${guide.category} / ${guide.minutes}`, 'eyebrow muted'), el('h1', guide.title), el('p', guide.intro, 'guide-intro'));
   const outcome = el('div', '', 'guide-outcome'); outcome.append(el('strong', '完成后，你会得到'), el('p', guide.outcome)); article.append(outcome);
   const savedSteps = state.read(`steps:${guide.id}`, []);
   const completed = new Set(Array.isArray(savedSteps) ? savedSteps.filter(i => Number.isInteger(i) && i >= 0 && i < guide.steps.length) : []);

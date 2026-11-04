@@ -1,0 +1,817 @@
+/* Interior pages: quiet typography and cool, solid surfaces.
+   Loaded after the shared styles and future.css. Homepage and site chrome
+   deliberately keep their own styling. */
+
+:is(.catalog-page, .product-page, .guide-page) > main,
+.catalog-page .tool-dialog {
+  --paper: #eef0f2;
+  --surface: #f8f9fb;
+  --ink: #22262d;
+  --muted: #646e7b;
+  --green: #465a73;
+  --accent: #627b9c;
+  --line: #d4dae2;
+  --soft: #e5e9ee;
+  --interior-link: #536985;
+  color: var(--ink);
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .serif-word {
+  color: inherit;
+  font-family: var(--sans);
+  font-weight: inherit;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .1em;
+  font-weight: 400;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .button {
+  min-height: 48px;
+  border-radius: 10px;
+  gap: 18px;
+  font-weight: 500;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .button.primary,
+.catalog-page .tool-dialog .button.primary {
+  background: #3e5067;
+  color: #f8f9fb;
+  border-color: #3e5067;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .button.primary:hover,
+.catalog-page .tool-dialog .button.primary:hover {
+  background: #303f52;
+  border-color: #303f52;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .text-link {
+  color: var(--interior-link);
+  min-height: 44px;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .live-dot {
+  background: #7187a3;
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main ::selection {
+  color: #22262d;
+  background: #d4deeb;
+}
+
+/* Product introductions and long-form project reading. */
+.product-page .section {
+  padding-block: 92px;
+}
+
+.product-page .product-intro {
+  padding-top: 44px;
+  padding-bottom: 64px;
+}
+
+.product-page .product-intro-row {
+  margin-block: 64px 58px;
+  gap: 64px;
+}
+
+.product-page .product-intro h1 {
+  font-family: var(--sans);
+  font-size: clamp(36px, 4.1vw, 52px);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -.035em;
+}
+
+.product-page .product-subtitle {
+  margin-top: 24px;
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: .015em;
+  color: var(--muted);
+}
+
+.product-page .product-intro-description > p {
+  font-size: 16px;
+  line-height: 1.95;
+  color: var(--muted);
+}
+
+.product-page .status-pill {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.product-page .product-shot {
+  padding: 36px 46px 0;
+  border: 1px solid #d6dde5;
+  border-radius: 14px;
+  background: #e4e8ee;
+}
+
+.product-page .product-shot img {
+  border-color: #cbd3de;
+  border-radius: 9px;
+  box-shadow: none;
+}
+
+.product-page .product-shot figcaption {
+  color: #5e6876;
+  font-size: 11px;
+  padding-block: 20px;
+}
+
+.product-page .section-heading h2,
+.product-page .getting-started h2,
+.product-page .product-outro h2 {
+  font-family: var(--sans);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -.025em;
+}
+
+.product-page .product-capabilities {
+  padding-top: 64px;
+}
+
+.product-page .capability-grid {
+  gap: 40px;
+  padding-top: 36px;
+}
+
+.product-page .capability-grid article > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.product-page .capability-grid h3,
+.product-page .start-steps h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -.015em;
+}
+
+.product-page .capability-grid p,
+.product-page .start-steps p,
+.product-page .getting-started > div > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.product-page .project-workflow {
+  padding: 38px 40px;
+  border: 1px solid #d4dce6;
+  border-radius: 12px;
+  background: #e3e7ed;
+  color: #22262d;
+}
+
+.product-page .project-workflow > p,
+.product-page .project-workflow > small,
+.product-page .workflow-steps span,
+.product-page .workflow-steps p {
+  color: #5e6876;
+}
+
+.product-page .project-workflow > p {
+  font-size: 11px;
+  letter-spacing: .07em;
+}
+
+.product-page .workflow-steps li {
+  border-color: #bfc9d6;
+}
+
+.product-page .workflow-steps h2 {
+  font-family: var(--sans);
+  color: #22262d;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.product-page .workflow-steps p {
+  font-size: 14px;
+  line-height: 1.95;
+}
+
+.product-page .case-facts {
+  padding-top: 28px;
+  margin-top: 34px;
+}
+
+.product-page .case-facts dt {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.product-page .case-facts dd {
+  color: #414c5b;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.product-page .case-limits {
+  padding: 28px 30px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f4f6f8;
+}
+
+.product-page .case-limits h3 {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.product-page .case-limits p {
+  color: var(--muted);
+}
+
+.product-page .case-source {
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.product-page pre {
+  border: 1px solid #3e4a5a;
+  border-radius: 10px;
+  background: #26303d;
+  color: #e7edf5;
+  padding: 22px;
+}
+
+.product-page .product-faq summary {
+  min-height: 44px;
+  align-items: center;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.product-page .product-faq summary::after {
+  color: var(--interior-link);
+}
+
+.product-page .product-faq details p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.product-page .related-projects > a {
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+}
+
+.product-page .related-projects > a:hover {
+  border-color: #b9c6d6;
+  background: #f6f8fa;
+}
+
+.product-page .related-projects strong {
+  color: #3f4c5e;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* Toolbox: retain useful controls without a dashboard treatment. */
+.catalog-page .library-hero {
+  padding-top: 48px;
+}
+
+.catalog-page .library-intro {
+  padding-block: 54px 60px;
+  gap: 72px;
+}
+
+.catalog-page .library-intro h1 {
+  font-family: var(--sans);
+  font-size: clamp(36px, 4.1vw, 52px);
+  font-weight: 500;
+  letter-spacing: -.035em;
+  line-height: 1.4;
+}
+
+.catalog-page .library-intro > div > p,
+.catalog-page .library-back,
+.catalog-page .library-start > span {
+  color: var(--muted);
+}
+
+.catalog-page .library-stats strong {
+  font-family: var(--sans);
+  color: #4b5b70;
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: -.04em;
+}
+
+.catalog-page .library-start a {
+  color: var(--interior-link);
+}
+
+.catalog-page .library-search-row .product-search {
+  border-color: var(--line);
+  border-radius: 10px;
+  background: #f8f9fb;
+}
+
+.catalog-page .library-search-row .product-search:focus-within {
+  border-color: #869ab4;
+  outline-color: #627b9c;
+}
+
+.catalog-page .sort-label select,
+.catalog-page .library-search-row .favorite-filter {
+  border-color: var(--line);
+  border-radius: 9px;
+  background: transparent;
+}
+
+.catalog-page .library-controls .tool-filter {
+  color: #5a6574;
+  border-radius: 8px;
+}
+
+.catalog-page .library-controls .tool-filter:hover {
+  color: #33465f;
+  background: #e2e7ed;
+}
+
+.catalog-page .library-controls .tool-filter.active {
+  background: #3e5067;
+  color: #f8f9fb;
+  border-color: #3e5067;
+}
+
+.catalog-page .library-options input {
+  accent-color: #536985;
+}
+
+.catalog-page .library-grid {
+  gap: 20px;
+}
+
+.catalog-page .library-card {
+  border-color: #d6dce4;
+  border-radius: 12px;
+  background: #f7f9fb;
+  box-shadow: none;
+}
+
+.catalog-page .library-card:hover,
+.catalog-page .library-card:focus-within {
+  border-color: #b6c3d4;
+  background: #fafbfd;
+  box-shadow: none;
+}
+
+.catalog-page .library-card .tool-mark {
+  background: #e6ebf1;
+  color: #53667f;
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 500;
+  border-radius: 10px;
+}
+
+.catalog-page .library-card h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -.015em;
+}
+
+.catalog-page .library-card > .library-summary {
+  color: #616d7c;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.catalog-page .library-card .favorite-button {
+  color: #697687;
+}
+
+.catalog-page .library-card .favorite-button:hover {
+  background: #e7edf3;
+}
+
+.catalog-page .library-card .favorite-button[aria-pressed="true"] {
+  color: #536985;
+}
+
+.catalog-page .price-badge,
+.catalog-page .language-badge {
+  background: #e9edf2;
+  color: #5b6879;
+  border-radius: 5px;
+}
+
+.catalog-page .library-card .tool-official,
+.catalog-page .tool-details-button:hover {
+  color: var(--interior-link);
+}
+
+.catalog-page .tool-details-button {
+  color: var(--muted);
+}
+
+.catalog-page .library-method p {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.catalog-page .library-next h2 {
+  font-family: var(--sans);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+
+.catalog-page .tool-dialog {
+  border-color: #cfd7e1;
+  border-radius: 14px;
+  background: #f5f7fa;
+  box-shadow: 0 20px 70px rgb(27 40 59 / 12%);
+}
+
+.catalog-page .tool-dialog::backdrop {
+  background: rgb(29 38 52 / 34%);
+}
+
+.catalog-page .tool-dialog h2 {
+  font-family: var(--sans);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+
+.catalog-page .tool-dialog .tool-detail-section .text-link,
+.catalog-page .tool-dialog .tool-detail-actions .text-link {
+  color: var(--interior-link);
+}
+
+.catalog-page .tool-dialog .dialog-close:hover {
+  background: #e5eaf1;
+}
+
+/* Guides keep the interaction familiar and make the prompt easy to read. */
+.guide-page .guide-article {
+  width: min(780px, calc(100% - 96px));
+  margin-block: 52px 100px;
+}
+
+.guide-page .guide-back {
+  margin-bottom: 52px;
+}
+
+.guide-page .guide-article h1 {
+  font-family: var(--sans);
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -.03em;
+}
+
+.guide-page .guide-intro {
+  font-size: 17px;
+  line-height: 1.95;
+  color: var(--muted);
+  margin-top: 28px;
+}
+
+.guide-page .guide-outcome {
+  margin-block: 38px;
+  padding: 26px 30px;
+  border: 1px solid #d5dde7;
+  border-radius: 10px;
+  background: #e6ebf1;
+}
+
+.guide-page .guide-outcome strong {
+  color: #526276;
+  font-weight: 500;
+}
+
+.guide-page .guide-outcome p {
+  color: #3d4959;
+  line-height: 1.9;
+}
+
+.guide-page .reading-progress progress {
+  height: 3px;
+  background: #d6dde6;
+}
+
+.guide-page .reading-progress progress::-webkit-progress-bar {
+  background: #d6dde6;
+}
+
+.guide-page .reading-progress progress::-webkit-progress-value {
+  background: #6d819d;
+}
+
+.guide-page .reading-progress progress::-moz-progress-bar {
+  background: #6d819d;
+}
+
+.guide-page .guide-steps li {
+  padding-block: 34px;
+}
+
+.guide-page .guide-steps h2 {
+  font-family: var(--sans);
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -.015em;
+}
+
+.guide-page .guide-steps p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.95;
+}
+
+.guide-page .step-complete {
+  color: #536985;
+}
+
+.guide-page .step-complete input {
+  accent-color: #536985;
+}
+
+.guide-page .prompt-builder {
+  padding: 34px;
+  border-color: #d4dce7;
+  border-radius: 12px;
+  background: #e6ebf1;
+}
+
+.guide-page .prompt-builder h2 {
+  font-family: var(--sans);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -.02em;
+}
+
+.guide-page .prompt-builder .builder-intro,
+.guide-page .prompt-builder .local-note,
+.guide-page .prompt-builder .eyebrow {
+  color: #5e6876;
+}
+
+.guide-page .prompt-field {
+  color: #3f4d60;
+  font-size: 13px;
+}
+
+.guide-page .prompt-field textarea {
+  min-height: 100px;
+  border-color: #bac7d8;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #263344;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.guide-page .prompt-field textarea::placeholder {
+  color: #6b7686;
+}
+
+.guide-page .prompt-section {
+  padding: 30px 34px;
+  border: 1px solid #3e4a5b;
+  border-radius: 12px;
+  background: #26303d;
+  color: #edf1f7;
+}
+
+.guide-page .prompt-heading h2 {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 500;
+  color: #edf1f7;
+}
+
+.guide-page .copy-button {
+  border: 1px solid #7e90a6;
+  border-radius: 8px;
+  background: #dce4ef;
+  color: #29384d;
+  min-height: 44px;
+}
+
+.guide-page .copy-button:hover {
+  background: #f1f5fa;
+  color: #26303d;
+}
+
+.guide-page .prompt-text {
+  background: #202a37;
+  color: #e0e8f3;
+  border-color: #657994;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.guide-page .copy-status {
+  color: #d5dde8;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.guide-page .guide-check h2,
+.guide-page .related-tools h2 {
+  font-family: var(--sans);
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -.015em;
+}
+
+.guide-page .related-pill {
+  border-color: #c3cdda;
+  border-radius: 8px;
+  background: transparent;
+  color: #536985;
+}
+
+.guide-page .related-pill:hover {
+  background: #e3e9f0;
+  border-color: #acbdd2;
+}
+
+.guide-page .guide-next strong {
+  color: #43546b;
+}
+
+@media (max-width: 1050px) {
+  .product-page .product-intro-row {
+    gap: 42px;
+  }
+
+  .catalog-page .library-intro {
+    gap: 42px;
+  }
+}
+
+@media (max-width: 760px) {
+  .product-page .section {
+    padding-block: 64px;
+  }
+
+  .product-page .product-intro {
+    padding-top: 28px;
+    padding-bottom: 44px;
+  }
+
+  .product-page .product-intro-row {
+    margin-block: 36px 38px;
+    gap: 28px;
+  }
+
+  .product-page .product-intro h1 {
+    font-size: clamp(32px, 8.2vw, 44px);
+  }
+
+  .product-page .product-intro-description > p {
+    font-size: 15px;
+  }
+
+  .product-page .product-shot {
+    padding: 18px 16px 0;
+    border-radius: 11px;
+  }
+
+  .product-page .product-shot figcaption {
+    padding-block: 15px;
+    font-size: 10px;
+  }
+
+  .product-page .section-heading h2,
+  .product-page .getting-started h2,
+  .product-page .product-outro h2 {
+    font-size: 28px;
+    line-height: 1.5;
+  }
+
+  .product-page .project-workflow {
+    padding: 28px 24px;
+  }
+
+  .product-page .case-facts dd {
+    font-size: 13px;
+  }
+
+  .product-page .case-limits,
+  .product-page .related-projects > a {
+    padding: 24px;
+  }
+
+  .catalog-page .library-hero {
+    padding-top: 28px;
+  }
+
+  .catalog-page .library-intro {
+    gap: 32px;
+    padding-block: 36px 38px;
+  }
+
+  .catalog-page .library-intro h1 {
+    font-size: clamp(34px, 8.2vw, 44px);
+  }
+
+  .catalog-page .library-stats strong {
+    font-size: 30px;
+  }
+
+  .catalog-page .library-grid {
+    gap: 16px;
+  }
+
+  .catalog-page .library-card > .library-summary {
+    font-size: 15px;
+  }
+
+  .catalog-page .library-next h2 {
+    font-size: 28px;
+  }
+
+  .catalog-page .tool-dialog h2 {
+    font-size: 28px;
+  }
+
+  .guide-page .guide-article {
+    width: calc(100% - 48px);
+    margin-block: 32px 72px;
+  }
+
+  .guide-page .guide-back {
+    margin-bottom: 34px;
+  }
+
+  .guide-page .guide-article h1 {
+    font-size: clamp(32px, 8.2vw, 42px);
+  }
+
+  .guide-page .guide-intro {
+    font-size: 16px;
+    margin-top: 24px;
+  }
+
+  .guide-page .guide-outcome {
+    padding: 24px;
+    margin-block: 30px;
+  }
+
+  .guide-page .guide-steps h2 {
+    font-size: 21px;
+  }
+
+  .guide-page .guide-steps p {
+    font-size: 15px;
+  }
+
+  .guide-page .prompt-builder,
+  .guide-page .prompt-section {
+    padding: 26px 22px;
+  }
+
+  .guide-page .prompt-builder h2 {
+    font-size: 25px;
+  }
+
+  .guide-page .prompt-heading h2 {
+    font-size: 20px;
+  }
+
+  .guide-page .prompt-text {
+    padding: 16px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalog-page .library-card,
+  .catalog-page .library-controls .tool-filter,
+  .product-page .related-projects > a,
+  .catalog-page .tool-dialog,
+  .guide-page .reading-progress progress {
+    transition: none;
+    animation: none;
+  }
+}

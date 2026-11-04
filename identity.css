@@ -1,0 +1,217 @@
+/* Shared identity only: keep each page's existing layout and interactions. */
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("fonts/instrument-sans-regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root,
+:is(.catalog-page, .product-page, .guide-page) > main,
+.catalog-page .tool-dialog {
+  --paper: #fafbf9;
+  --surface: #ffffff;
+  --ink: #20232b;
+  --muted: #626778;
+  --line: #d7dce9;
+  --soft: #eef1fa;
+  --accent: #173cff;
+  --green: var(--ink);
+  --interior-link: var(--ink);
+  --sans: "Instrument Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --serif: var(--sans);
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.brand,
+.footer-brand,
+.work-page .work-name {
+  font-family: var(--sans);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.brand,
+.footer-brand {
+  letter-spacing: -.05em;
+}
+
+.brand-dot,
+.footer-brand > span {
+  color: var(--accent);
+}
+
+:is(.catalog-page, .product-page, .guide-page) :is(.brand-dot, .footer-brand > span),
+.header nav a::after {
+  background: var(--accent);
+}
+
+.header,
+.header-note,
+footer,
+.product-page .workflow-steps li {
+  border-color: var(--line);
+}
+
+.header nav a,
+.header-note,
+footer > a,
+.text-link,
+.catalog-page .library-back,
+.catalog-page .library-card .tool-official,
+.product-page .related-projects strong,
+.guide-page .guide-next strong {
+  color: var(--ink);
+}
+
+.header nav a:hover,
+.header nav a[aria-current],
+.text-link:hover,
+.catalog-page .library-back:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.product-page .project-workflow,
+.product-page .product-shot,
+.product-page .case-limits,
+.catalog-page .library-card,
+.catalog-page .library-search-row .product-search,
+dialog {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .button.primary,
+.catalog-page .tool-dialog .button.primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+:is(.catalog-page, .product-page, .guide-page) > main .button.primary:hover,
+.catalog-page .tool-dialog .button.primary:hover {
+  background: #3d423c;
+  border-color: #3d423c;
+}
+
+:focus-visible {
+  outline-color: var(--accent);
+}
+
+::selection {
+  background: #d8dbe3;
+  color: var(--ink);
+}
+
+/* The archive and detail pages share one navigation scale. */
+:is(.work-page, .catalog-page, .product-page, .guide-page) .header {
+  width: min(1184px, calc(100% - 96px));
+  height: 88px;
+  min-height: 88px;
+  gap: 28px;
+}
+
+:is(.work-page, .catalog-page, .product-page, .guide-page) .header .brand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 26px;
+  line-height: 1;
+}
+
+:is(.work-page, .catalog-page, .product-page, .guide-page) .header nav {
+  gap: 24px;
+}
+
+:is(.work-page, .catalog-page, .product-page, .guide-page) .header nav a,
+:is(.work-page, .catalog-page, .product-page, .guide-page) .header-note {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+:is(.work-page, .catalog-page, .product-page, .guide-page) .header nav a {
+  padding-block: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Keep compact labels while reserving the actual space needed for a tap. */
+.work-page .library-card {
+  grid-template-columns: minmax(0, 1fr) 44px;
+}
+
+.work-page .library-card .favorite-button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+:is(.work-page, .catalog-page) :is(.tool-official, .tool-details-button, .tool-filter, .sort-label select, .text-link),
+.work-page .work-caption > a,
+:is(.work-page, .catalog-page, .product-page, .guide-page) footer > a {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.work-page .work-caption > a,
+:is(.work-page, .catalog-page, .product-page, .guide-page) footer > a:not(.footer-brand) {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header {
+    width: calc(100% - 48px);
+    height: 76px;
+    min-height: 76px;
+    gap: 16px;
+  }
+
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header .brand {
+    font-size: 24px;
+  }
+
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header nav {
+    gap: 12px;
+  }
+
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header nav a {
+    font-size: 11px;
+  }
+
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header-note {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header {
+    width: calc(100% - 36px);
+    gap: 8px;
+  }
+
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header nav {
+    gap: 4px;
+  }
+
+  :is(.work-page, .catalog-page, .product-page, .guide-page) .header nav a {
+    display: inline-flex;
+    font-size: 10px;
+  }
+}
+
+/* Shared signature of the open-field homepage; long-form text keeps a neutral ink. */
+.brand,.footer-brand,.work-page .work-name,.section-heading h1,.section-heading h2{color:#182bdb}

@@ -3,8 +3,11 @@
   const data = window.SUMTEZ_TOOLS;
   if (!grid || !data) return;
   const state = window.SUMTEZ_STATE;
-  const featuredOnly = grid.closest('[data-tool-scope]')?.dataset.toolScope === 'featured';
+  const scope = grid.closest('[data-tool-scope]');
+  const featuredOnly = scope?.dataset.toolScope === 'featured';
+  const previewLimit = featuredOnly ? Math.max(0, Number(scope.dataset.previewLimit) || 0) : 0;
   const tools = data.tools.filter(tool => !featuredOnly || tool.featured);
+  const previewIds = (scope?.dataset.previewIds || '').split(/\s+/).filter(id => tools.some(tool => tool.id === id));
   const categories = data.categories.filter(category => tools.some(tool => tool.category === category.id));
   const categoryNames = Object.fromEntries(data.categories.map(category => [category.id, category.label]));
   const el = (tag, text, className) => {
@@ -17,6 +20,11 @@
     const node = el('a', text, className);
     node.href = url; node.target = '_blank'; node.rel = 'noopener noreferrer';
     return node;
+  };
+  const focusVisible = (target, options) => {
+    const disclosure = target?.closest('details');
+    if (disclosure && !disclosure.open) disclosure.open = true;
+    target?.focus(options);
   };
   const readFavorites = () => {
     const saved = state.read('favorites', []);
@@ -44,12 +52,21 @@
   });
   const dialog = el('dialog', '', 'tool-dialog');
   dialog.setAttribute('aria-labelledby', 'tool-detail-title');
+  let detailTrigger = null;
   const close = el('button', '×', 'dialog-close');
   close.type = 'button'; close.setAttribute('aria-label', '关闭工具详情'); close.autofocus = true;
   close.addEventListener('click', () => dialog.close());
   const detailBody = el('div', '', 'tool-detail-body');
   dialog.append(close, detailBody);
   document.body.append(dialog);
+  dialog.addEventListener('close', () => {
+    if (detailTrigger?.isConnected && !detailTrigger.closest('[hidden]')) {
+      detailTrigger.focus({preventScroll: true});
+    } else if (detailTrigger) {
+      focusVisible(search, {preventScroll: true});
+    }
+    detailTrigger = null;
+  });
   dialog.addEventListener('click', event => {
     if (event.target !== dialog) return;
     const bounds = dialog.getBoundingClientRect();
@@ -61,7 +78,8 @@
     if (sourceUrl) section.append(external(sourceLabel, sourceUrl, 'text-link'));
     return section;
   };
-  function showDetails(tool) {
+  function showDetails(tool, trigger) {
+    detailTrigger = trigger;
     detailBody.replaceChildren();
     const title = el('h2', tool.name); title.id = 'tool-detail-title';
     detailBody.append(el('p', categoryNames[tool.category] + ' / 第三方工具', 'eyebrow muted'), title, el('p', tool.summary, 'tool-detail-intro'));
@@ -99,20 +117,25 @@
       const persisted = state.write('favorites', [...favorites]);
       storageStatus.textContent = persisted ? '收藏已更新，仅保存在当前浏览器。' : '浏览器未允许本地保存，收藏仅在本页有效。';
       updateFavorite(); filter();
-      if (card.hidden) favoriteFilter.focus();
+      if (card.hidden) focusVisible(favoriteFilter);
     });
-    const badges = el('div', '', 'library-badges');
-    badges.append(el('span', tool.pricingLabel, 'price-badge'));
-    if (tool.chineseFriendly) badges.append(el('span', '中文优先', 'language-badge'));
-    const update = el('p', '', 'library-update');
-    const date = el('time', tool.updateDate.replaceAll('-', '.')); date.dateTime = tool.updateDate;
-    update.append(el('span', '更新记录'), date);
     const actions = el('div', '', 'tool-actions');
     const details = el('button', '详情与来源 ↗', 'tool-details-button');
     details.type = 'button'; details.setAttribute('aria-label', '查看 ' + tool.name + ' 的详情与来源');
-    details.addEventListener('click', () => showDetails(tool));
+    details.setAttribute('aria-haspopup', 'dialog');
+    details.addEventListener('click', () => showDetails(tool, details));
     actions.append(external('前往官网 ↗', tool.url, 'tool-official'), details);
-    card.append(mark, heading, favorite, el('p', tool.summary, 'library-summary'), badges, update, actions);
+    card.append(mark, heading, favorite);
+    if (!featuredOnly) {
+      const badges = el('div', '', 'library-badges');
+      badges.append(el('span', tool.pricingLabel, 'price-badge'));
+      if (tool.chineseFriendly) badges.append(el('span', '中文优先', 'language-badge'));
+      const update = el('p', '', 'library-update');
+      const date = el('time', tool.updateDate.replaceAll('-', '.')); date.dateTime = tool.updateDate;
+      update.append(el('span', '更新记录'), date);
+      card.append(el('p', tool.summary, 'library-summary'), badges, update);
+    }
+    card.append(actions);
     grid.append(card);
     const text = [tool.name, ...(tool.aliases || []), categoryNames[tool.category], tool.summary].join(' ').toLocaleLowerCase();
     return {tool, card, index, text, updateFavorite};
@@ -120,20 +143,29 @@
   let currentOrder = "";
   function filter() {
     const words = search.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    const hasFilters = category !== 'all' || favoritesOnly || words.length > 0 || free?.checked || chinese?.checked;
+    const isPreview = previewLimit > 0 && !hasFilters && (!sort || sort.value === 'curated');
+    const ordered = [...cards].sort((a, b) => {
+      if (sort?.value === 'updated') return b.tool.updateDate.localeCompare(a.tool.updateDate) || a.index - b.index;
+      if (sort?.value === 'name') return a.tool.name.localeCompare(b.tool.name, 'zh-CN') || a.index - b.index;
+      if (isPreview && previewIds.length) {
+        const aRank = previewIds.indexOf(a.tool.id), bRank = previewIds.indexOf(b.tool.id);
+        const rank = (aRank < 0 ? Infinity : aRank) - (bRank < 0 ? Infinity : bRank);
+        if (rank && !Number.isNaN(rank)) return rank;
+      }
+      return Number(b.tool.featured) - Number(a.tool.featured) || a.index - b.index;
+    });
     let count = 0;
-    cards.forEach(({tool, card, text}) => {
+    let shown = 0;
+    ordered.forEach(({tool, card, text}) => {
       const matches = (category === 'all' || category === tool.category)
         && (!favoritesOnly || favorites.has(tool.id))
         && (!free?.checked || tool.freeAccess)
         && (!chinese?.checked || tool.chineseFriendly)
         && words.every(word => text.includes(word));
-      card.hidden = !matches;
       if (matches) count++;
-    });
-    const ordered = [...cards].sort((a, b) => {
-      if (sort?.value === 'updated') return b.tool.updateDate.localeCompare(a.tool.updateDate) || a.index - b.index;
-      if (sort?.value === 'name') return a.tool.name.localeCompare(b.tool.name, 'zh-CN') || a.index - b.index;
-      return Number(b.tool.featured) - Number(a.tool.featured) || a.index - b.index;
+      card.hidden = !matches || (isPreview && shown >= previewLimit);
+      if (!card.hidden) shown++;
     });
     const orderKey = ordered.map(({tool}) => tool.id).join(',');
     if (currentOrder !== orderKey) {
@@ -144,13 +176,15 @@
       const active = button.dataset.toolFilter === category;
       button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
     });
-    document.querySelector('#tool-count').textContent = count + ' / ' + tools.length + (featuredOnly ? ' 款精选' : ' 款工具');
+    document.querySelector('#tool-count').textContent = isPreview
+      ? '精选展示 ' + shown + ' / ' + tools.length
+      : count + ' / ' + tools.length + (featuredOnly ? ' 款精选' : ' 款工具');
     document.querySelector('#favorite-count').textContent = tools.filter(tool => favorites.has(tool.id)).length;
     favoriteFilter.classList.toggle('active', favoritesOnly);
     favoriteFilter.setAttribute('aria-pressed', String(favoritesOnly));
     empty.hidden = count !== 0;
     empty.querySelector('h3').textContent = favoritesOnly ? '当前筛选下还没有收藏' : '还没有匹配的工具';
-    if (clear) clear.hidden = category === 'all' && !favoritesOnly && !words.length && !free?.checked && !chinese?.checked;
+    if (clear) clear.hidden = !hasFilters && (!sort || sort.value === 'curated');
   }
   function reset() {
     category = 'all'; favoritesOnly = false; search.value = '';
@@ -164,8 +198,8 @@
   free?.addEventListener('change', filter);
   chinese?.addEventListener('change', filter);
   favoriteFilter.addEventListener('click', () => { favoritesOnly = !favoritesOnly; filter(); });
-  document.querySelector('#tool-reset').addEventListener('click', () => { reset(); search.focus(); });
-  clear?.addEventListener('click', reset);
+  document.querySelector('#tool-reset').addEventListener('click', () => { reset(); focusVisible(search); });
+  clear?.addEventListener('click', () => { reset(); focusVisible(search); });
   document.querySelectorAll('[data-quick-query], [data-quick-category]').forEach(button => button.addEventListener('click', () => {
     reset();
     if (button.dataset.quickQuery) search.value = button.dataset.quickQuery;
@@ -175,6 +209,7 @@
   window.addEventListener('storage', event => {
     if (event.key !== 'sumtez:favorites' && event.key !== null) return;
     favorites = readFavorites(); cards.forEach(({updateFavorite}) => updateFavorite()); filter();
+    if (document.activeElement?.closest('.library-card[hidden]')) focusVisible(favoriteFilter);
   });
   filter();
 })();
