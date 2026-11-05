@@ -32,9 +32,9 @@ for (const name of fs.readdirSync(assets).filter(name => name.endsWith('.html'))
   let html = fs.readFileSync(file, 'utf8');
   if (!html.includes('property="og:image"')) html = html.replace('</head>', '<meta property="og:image" content="https://sumtez.com/images/social-card.png"></head>');
   if (!html.includes('name="twitter:card"')) html = html.replace('</head>', '<meta name="twitter:card" content="summary_large_image"></head>');
-  html = html.replace(/<link rel="stylesheet" href="(?:future|future-projects|future-interior|home|project-detail|site-polish)\.css(?:\?[^" ]*)?">/g, '');
+  html = html.replace(/<link rel="stylesheet" href="(?:future|future-projects|future-interior|home|project-detail|site-polish|project-stack)\.css(?:\?[^" ]*)?">/g, '');
   const sharedStyle = name === 'index.html' || name === 'tools.html' || name === 'guide.html' || detailPages.has(name);
-  const pageStyles = name === 'index.html' ? '<link rel="stylesheet" href="home.css">'
+  const pageStyles = name === 'index.html' ? '<link rel="stylesheet" href="home.css"><link rel="stylesheet" href="project-stack.css">'
     : detailPages.has(name) ? '<link rel="stylesheet" href="project-detail.css">'
     : sharedStyle ? ''
     : '<link rel="stylesheet" href="future.css"><link rel="stylesheet" href="future-projects.css"><link rel="stylesheet" href="future-interior.css">';

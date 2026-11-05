@@ -1,0 +1,60 @@
+/* Page scroll owns the stack. Without enhancement, every card remains in flow. */
+.home-page .project-stack { display: block; position: relative; padding: 24px 0 96px; isolation: isolate; }
+.home-page .work-heading { margin-bottom: 0; }
+.project-stack-nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 64px; padding: 10px 0; background: var(--paper); border-bottom: 1px solid var(--line); z-index: 20; }
+.project-stack-nav[hidden] { display: none; }
+.project-stack-controls { display: flex; align-items: center; gap: 24px; }
+.project-stack-nav button { border: 0; background: transparent; color: var(--ink); font: inherit; font-size: var(--type-ui); min-height: 44px; padding: 4px 0; cursor: pointer; }
+.project-stack-nav button[aria-disabled="true"] { opacity: .35; cursor: default; }
+.project-stack-nav button:hover:not([aria-disabled="true"]) { text-decoration: underline; text-underline-offset: 5px; }
+.project-stack-count { font: var(--type-meta)/1.6 var(--mono); white-space: nowrap; }
+.project-stack-hint { color: var(--muted); font-size: var(--type-meta); }
+.project-stack-card { position: relative; margin: 0 0 56px; scroll-margin-top: 90px; }
+.project-stack-card:last-child { margin-bottom: 0; }
+.project-stack-surface { --card-paper: #e9eae5; --card-ink: #252629; --card-muted: #62666c; --card-line: #cfd1cc; --card-art: #d4d8d0; display: grid; grid-template-columns: 1.15fr .85fr; min-height: clamp(440px, 62svh, 560px); color: var(--card-ink); background: var(--card-paper); border: 1px solid var(--card-line); border-radius: 3px; transform-origin: 50% 0; }
+.project-stack-card:nth-child(even) .project-stack-surface { --card-paper: #303438; --card-ink: #f4f5f0; --card-muted: #c0c5c5; --card-line: #555c60; --card-art: #454e55; }
+.project-stack-copy { min-width: 0; padding: 30px 36px; display: flex; flex-direction: column; }
+.project-stack-kicker { display: flex; gap: 16px; flex-wrap: wrap; margin: 0; color: var(--card-muted); font: var(--type-meta)/1.6 var(--mono); }
+.project-stack-name { font: 400 clamp(40px, 5.6vw, 76px)/1.04 Arial, Helvetica, sans-serif; letter-spacing: -.05em; margin: 40px 0 14px; overflow-wrap: anywhere; }
+.project-stack-copy .project-stack-title { font: 400 var(--type-lead)/1.6 var(--sans); letter-spacing: 0; margin: 0 0 16px; text-wrap: wrap; }
+.project-stack-description { margin: 0 0 28px; max-width: 27em; color: var(--card-muted); font-size: var(--type-body); line-height: var(--leading-body); }
+.project-stack-actions { display: flex; gap: 24px; flex-wrap: wrap; margin-top: auto; }
+.project-stack-actions a { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--type-ui); color: var(--card-ink); }
+.project-stack-actions a:first-child { border-bottom: 1px solid currentColor; }
+.project-stack-actions a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.project-stack-actions a:focus-visible { outline-color: var(--card-ink); }
+.project-stack-art { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; min-width: 0; border-left: 1px solid var(--card-line); background: var(--card-art); }
+.project-stack-art::before { content: ''; position: absolute; inset: 12%; border: 1px solid currentColor; border-radius: 50%; opacity: .25; transform: rotate(-24deg) scaleY(.7); }
+.project-stack-art::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 5px, currentColor 5px 6px); opacity: .04; pointer-events: none; }
+.project-stack-glyph { font: 500 clamp(100px, 17vw, 240px)/1 Arial, Helvetica, sans-serif; letter-spacing: -.1em; padding-right: .1em; transform: rotate(-9deg); }
+.project-stack-art-label { position: absolute; bottom: 22px; left: 22px; right: 22px; display: flex; justify-content: space-between; gap: 8px; font: var(--type-meta)/1.6 var(--mono); color: var(--card-muted); }
+.project-stack-art--code .project-stack-glyph { font: 500 clamp(70px, 10vw, 140px)/1.2 var(--mono); letter-spacing: -.1em; transform: none; }
+.project-stack-art--map::before { border-radius: 0; transform: rotate(-12deg); }
+.project-stack-art--map .project-stack-glyph { font-size: clamp(85px, 13vw, 180px); }
+.project-stack-art--flow .project-stack-glyph { font-size: clamp(85px, 12vw, 170px); transform: none; }
+.work.has-project-stack .project-stack-nav { position: sticky; top: 0; }
+.has-project-stack .project-stack-card { position: sticky; top: var(--stack-top, 90px); }
+@media(max-width: 760px) {
+  .project-stack-copy { padding: 24px; }
+  .project-stack-surface { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  .project-stack-name { margin-top: 24px; font-size: clamp(40px, 9vw, 64px); }
+  .project-stack-art { height: 120px; border-left: 0; border-top: 1px solid var(--card-line); }
+  .project-stack-glyph, .project-stack-art--code .project-stack-glyph, .project-stack-art--map .project-stack-glyph, .project-stack-art--flow .project-stack-glyph { font-size: 90px; }
+  .project-stack-art::before { inset: 10% 25%; }
+  .project-stack-art-label { left: 14px; right: 14px; bottom: 8px; }
+  .project-stack-art-label span:last-child { display: none; }
+  .project-stack-description { margin-bottom: 20px; }
+  .project-stack-card { margin-bottom: 40px; }
+  .project-stack-hint { display: none; }
+  .project-stack-controls { gap: 22px; }
+}
+@media(max-width: 380px) {
+  .project-stack-copy { padding: 20px; }
+  .project-stack-controls { gap: 16px; }
+  .project-stack-kicker { gap: 8px; }
+  .project-stack-art { height: 104px; }
+}
+@media(prefers-reduced-motion: reduce) {
+  .has-project-stack .project-stack-card { position: relative; top: auto; }
+  .project-stack-surface { transform: none !important; }
+}
