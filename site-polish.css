@@ -1,0 +1,449 @@
+/* Final shared layer: tokens, navigation, controls, catalogue and reading surfaces.
+   Load last. The homepage wordmark/work grid and project-title scales remain owned
+   by home.css and project-detail.css. */
+:root,
+body {
+  --color-page: #f5f5f4;
+  --color-text: #252629;
+  --color-secondary: #62666c;
+  --color-border: #d4d5d7;
+  --color-hover: #ebebe9;
+  --color-field: #fff;
+  --target-size: 44px;
+  --page-gutter: 48px;
+  --content-width: 1440px;
+  --reading-width: 760px;
+  --paper: var(--color-page);
+  --surface: var(--color-field);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-border);
+  --green: var(--color-text);
+  --accent: var(--color-text);
+  --soft: var(--color-hover);
+  --width: var(--content-width);
+  --serif: var(--sans);
+}
+
+html { scrollbar-gutter: stable; scroll-padding-top: 24px; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.6; }
+::selection,
+.product-page ::selection { background: #dcdcd8; color: var(--ink); }
+body :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0; }
+body :is(button, summary, input, select, textarea, .button, .text-link, .related-pill) { touch-action: manipulation; }
+body :is(input, textarea, select) { accent-color: var(--ink); }
+body :is(input, textarea)::placeholder { color: var(--muted); opacity: 1; }
+body :is(.button, .text-link, .related-pill, .step-complete) { min-height: var(--target-size); }
+body .button { max-width: 100%; border-radius: 0; box-shadow: none; }
+body .button.primary { background: var(--ink); color: var(--paper); }
+body .button.primary:hover { background: #3c3d40; }
+body .button:active { transform: none; }
+body .text-link { color: var(--ink); font-weight: 400; text-underline-offset: 4px; }
+
+/* Identical shell dimensions and navigation across all four page types. */
+.header,
+.product-page .header,
+.section,
+.product-page .section,
+footer,
+.product-page footer {
+  width: calc(100% - var(--page-gutter) * 2);
+  max-width: var(--content-width);
+  margin-inline: auto;
+}
+.header,
+.product-page .header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 112px;
+  gap: 32px;
+  border: 0;
+  background: transparent;
+}
+.header::before,
+.product-page .header::before { display: none; }
+.header .brand,
+.product-page .header .brand {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: var(--target-size);
+  font: 600 35px/1 Arial, Helvetica, sans-serif;
+  letter-spacing: -2px;
+}
+.header .brand-dot,
+.product-page .header .brand-dot { font: inherit; color: var(--ink); top: 0; margin: 0; line-height: inherit; }
+.header nav,
+.product-page .header nav { display: flex; align-items: center; gap: 28px; margin-left: auto; }
+.header nav a,
+.product-page .header nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-size);
+  min-height: var(--target-size);
+  padding: 10px 0;
+  color: var(--ink);
+  font-size: 12px;
+}
+.header nav a::after,
+.product-page .header nav a::after {
+  width: 100%;
+  height: 1px;
+  left: 0;
+  bottom: 6px;
+  border-radius: 0;
+  background: var(--ink);
+}
+.header nav a:is(:hover, :focus-visible, [aria-current])::after { opacity: 1; }
+.header-note,
+.product-page .header-note {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-size);
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  font: 11px/1.6 var(--mono);
+}
+.home-page .home-motion-toggle {
+  width: var(--target-size);
+  height: var(--target-size);
+  min-height: var(--target-size);
+  margin: 0;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+.home-page .home-motion-toggle:hover { background: var(--color-hover); border-color: var(--ink); }
+footer,
+.product-page footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 20px 0 32px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: 11px/1.7 var(--mono);
+}
+footer .footer-brand { display: none; }
+footer > span,
+footer > a:last-child { font: inherit; }
+footer > a:last-child { display: inline-flex; align-items: center; min-height: var(--target-size); margin-left: auto; }
+
+/* Metadata remains quiet without falling below an eleven-pixel reading size. */
+body :is(.eyebrow, .work-count, .section-index, .library-category, .catalog-note, .guide-number, .guide-meta, .guide-time, .local-note, .source-note),
+.home-page .section-heading :is(h1, h2) span,
+.product-page :is(.eyebrow, .status-pill, .case-source),
+.product-page .product-shot figcaption,
+.product-page .project-workflow > :is(p, small),
+.product-page .workflow-steps li > span,
+.product-page .capability-grid article > span,
+.product-page .case-facts dt,
+.product-page .start-steps li > span,
+.product-page .related-projects span { font-size: 11px; }
+.home-page .section-heading .text-link { min-height: var(--target-size); }
+.home-page .library-card { grid-template-columns: minmax(0, 1fr) 44px; }
+.home-page .library-card .favorite-button { width: 44px; height: 44px; min-height: 44px; }
+.home-page .library-card :is(.tool-official, .tool-details-button) { min-height: 44px; font-size: 11px; }
+.home-page .library-card .tool-actions { align-items: center; gap: 8px; }
+
+/* Search, category and optional filters form separate, readable control groups. */
+.library-controls { gap: 18px; }
+.library-search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px 24px; }
+.library-search-row .product-search {
+  min-height: 48px;
+  min-width: 0;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+.library-search-row .product-search:focus-within { border-color: var(--ink); outline: 2px solid var(--ink); outline-offset: 3px; }
+.library-search-row .product-search input { min-height: 46px; padding-block: 10px; font-size: 16px; }
+.sort-label { min-width: 0; gap: 8px; font-size: 12px; }
+.sort-label select {
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 16px;
+}
+.library-controls .tool-filters { gap: 6px 8px; padding: 16px 0; border-block: 1px solid var(--line); }
+.library-controls .tool-filter {
+  min-height: var(--target-size);
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.library-controls .tool-filter:hover { background: var(--color-hover); color: var(--ink); }
+.library-controls .tool-filter:is(.active, [aria-pressed="true"]) { background: var(--ink); color: var(--paper); border-color: var(--ink); box-shadow: none; }
+.library-search-row .favorite-filter { min-height: 48px; border-color: var(--line); }
+.library-options { gap: 8px 28px; color: var(--muted); font-size: 13px; }
+.library-options label { min-height: var(--target-size); }
+.library-options input { flex: none; width: 18px; height: 18px; accent-color: var(--ink); }
+.library-options .text-link { min-height: var(--target-size); font-size: 13px; }
+.catalog-note { flex-wrap: wrap; gap: 8px 20px; font: 11px/1.8 var(--mono); }
+.catalog-note p { max-width: none; }
+.home-catalog-cta { padding: 24px 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; }
+.home-catalog-cta:hover { border-color: var(--ink); }
+
+/* Full catalogue: useful branding, descriptive text and actions in an open grid. */
+.catalog-page .section { padding-block: 48px; scroll-margin-top: 24px; }
+.catalog-page .library-hero { padding-top: 24px; padding-bottom: 0; }
+.catalog-page .library-intro { grid-template-columns: minmax(0, 1fr) 260px; gap: 64px; padding: 40px 0 48px; }
+.catalog-page .library-intro h1 { font: 400 clamp(40px, 5vw, 72px)/1.2 var(--sans); letter-spacing: -.04em; }
+.catalog-page .library-intro .serif-word { font: inherit; }
+.catalog-page .library-intro > div > p { max-width: 52ch; font-size: 16px; line-height: 1.9; }
+.catalog-page .library-stats { gap: 24px; padding-left: 28px; }
+.catalog-page .library-stats strong { color: var(--ink); font: 400 44px/1.2 Arial, Helvetica, sans-serif; letter-spacing: -.04em; }
+.catalog-page .library-intro .library-stats > p { margin: 0; font-size: 11px; }
+.catalog-page .library-start { gap: 8px 28px; padding-block: 14px; font-size: 13px; }
+.catalog-page .library-directory { padding-top: 32px; }
+.catalog-page .library-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 40px; }
+.catalog-page .library-card {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 44px;
+  grid-template-rows: auto 1fr auto auto auto;
+  gap: 0 12px;
+  min-width: 0;
+  padding: 28px 0 24px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.catalog-page .library-card:is(:hover, :focus-within) { border-color: var(--ink); background: transparent; box-shadow: none; transform: none; }
+.catalog-page .library-card .tool-mark {
+  position: static;
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--color-hover);
+  color: var(--ink);
+  font: 500 20px/1 Arial, Helvetica, sans-serif;
+}
+.catalog-page .library-card-heading { grid-column: 2; grid-row: 1; min-width: 0; min-height: 0; padding: 0; }
+.catalog-page .library-card h3 { padding: 0; color: var(--ink); font: 500 20px/1.4 var(--sans); letter-spacing: -.025em; }
+.catalog-page .library-category { margin-top: 5px; font-size: 11px; }
+.catalog-page .library-card .favorite-button {
+  position: static;
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  color: var(--muted);
+  background: transparent;
+  font-size: 24px;
+}
+.catalog-page .library-card .favorite-button:hover { background: var(--color-hover); }
+.catalog-page .library-card .favorite-button[aria-pressed="true"] { color: var(--ink); background: var(--color-hover); }
+.catalog-page .library-card > .library-summary { grid-column: 1 / -1; min-height: 0; margin: 20px 0 18px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+.catalog-page .library-badges { grid-column: 1 / -1; gap: 8px; margin: 0 0 16px; font-size: 11px; }
+.catalog-page .library-badges > span { padding: 3px 7px; border: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--muted); }
+.catalog-page .library-card > .library-update { grid-column: 1 / -1; flex-wrap: wrap; gap: 4px 12px; margin: 0; color: var(--muted); font: 11px/1.8 var(--mono); }
+.catalog-page .library-card .tool-actions { grid-column: 1 / -1; margin-top: 10px; padding: 0; border: 0; gap: 12px; }
+.catalog-page .library-card :is(.tool-official, .tool-details-button) { min-height: 44px; color: var(--ink); font-size: 12px; font-weight: 400; }
+.catalog-page .library-method { margin-top: 32px; padding-top: 16px; }
+.catalog-page .library-method p { max-width: 80ch; font-size: 14px; line-height: 1.95; }
+.catalog-page .library-next { border-top: 1px solid var(--ink); }
+.catalog-page .library-next h2 { font: 400 clamp(26px, 3vw, 36px)/1.5 var(--sans); letter-spacing: -.025em; }
+.catalog-page .empty-state { padding: 56px 0; border-block: 1px solid var(--line); background: transparent; text-align: center; }
+.catalog-page .empty-state p { margin: 16px 0 24px; color: var(--muted); }
+
+/* A readable article and neutral editing workspace for the existing prompt tool. */
+.guide-page .guide-article { width: calc(100% - var(--page-gutter) * 2); max-width: var(--reading-width); margin: 32px auto 80px; }
+.guide-page .guide-back { margin-bottom: 34px; color: var(--muted); font-size: 12px; }
+.guide-page .guide-article h1 { font: 400 clamp(32px, 4.4vw, 48px)/1.4 var(--sans); letter-spacing: -.035em; }
+.guide-page .guide-article > .eyebrow { margin-bottom: 18px; font: 11px/1.8 var(--mono); }
+.guide-page .guide-intro { margin-top: 24px; color: var(--muted); font-size: 17px; line-height: 1.95; }
+.guide-page .guide-outcome { margin: 32px 0; padding: 22px 0 22px 24px; border-left: 2px solid var(--ink); background: transparent; }
+.guide-page .guide-outcome strong { color: var(--ink); font-size: 12px; font-weight: 500; }
+.guide-page .guide-outcome p { color: var(--muted); font-size: 16px; line-height: 1.9; }
+.guide-page .reading-progress { gap: 12px 20px; padding: 20px 0; border-block: 1px solid var(--line); }
+.guide-page .reading-progress > span { font-size: 13px; }
+.guide-page .reading-progress progress { height: 3px; border-radius: 0; background: var(--line); }
+.guide-page .reading-progress progress::-webkit-progress-bar { background: var(--line); }
+.guide-page .reading-progress progress::-webkit-progress-value { background: var(--ink); }
+.guide-page .reading-progress progress::-moz-progress-bar { background: var(--ink); }
+.guide-page .prompt-jump { margin-top: 16px; }
+.guide-page .guide-steps { margin: 16px 0 40px; }
+.guide-page .guide-steps li { padding: 30px 0 30px 44px; }
+.guide-page .guide-steps li::before { color: var(--muted); font: 12px/1.8 var(--mono); }
+.guide-page .guide-steps h2 { font: 500 22px/1.6 var(--sans); letter-spacing: -.02em; }
+.guide-page .guide-steps p { margin-top: 14px; color: var(--muted); font-size: 16px; line-height: 1.95; }
+.guide-page .step-complete { min-height: 44px; gap: 12px; color: var(--ink); font-size: 13px; }
+.guide-page .step-complete input { width: 18px; height: 18px; accent-color: var(--ink); }
+.guide-page .prompt-builder { padding: 28px; border: 1px solid var(--line); border-radius: 0; background: transparent; scroll-margin-top: 24px; }
+.guide-page .prompt-builder h2 { margin: 16px 0; font: 400 26px/1.5 var(--sans); letter-spacing: -.025em; }
+.guide-page .builder-intro { color: var(--muted); font-size: 14px; line-height: 1.9; }
+.guide-page .prompt-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 24px 0 12px; }
+.guide-page .prompt-field { min-width: 0; gap: 10px; color: var(--ink); font-size: 13px; }
+.guide-page .prompt-field textarea { min-height: 112px; padding: 12px; border: 1px solid var(--line); border-radius: 0; background: var(--surface); color: var(--ink); font: 16px/1.75 var(--sans); }
+.guide-page .prompt-field textarea::placeholder { color: var(--muted); }
+.guide-page .prompt-form > button { min-height: 44px; font-size: 12px; }
+.guide-page .prompt-section { margin: 24px 0 40px; padding: 28px 0; border-block: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); }
+.guide-page .prompt-heading { gap: 16px; }
+.guide-page .prompt-heading h2 { font: 500 21px/1.5 var(--sans); }
+.guide-page .copy-button { flex: none; min-height: 44px; padding: 10px 16px; border: 1px solid var(--ink); border-radius: 0; background: var(--ink); color: var(--paper); font-size: 12px; }
+.guide-page .copy-button:hover { background: #3c3d40; }
+.guide-page .prompt-text { min-height: 340px; margin-top: 20px; padding: 16px; border: 1px solid var(--line); border-radius: 0; background: var(--surface); color: var(--ink); font: 16px/1.85 var(--mono); }
+.guide-page .copy-status { color: var(--muted); font-size: 12px; line-height: 1.8; }
+.guide-page .guide-check h2,
+.guide-page .related-tools h2 { font: 500 21px/1.6 var(--sans); }
+.guide-page .guide-check p { color: var(--muted); font-size: 16px; line-height: 1.95; }
+.guide-page .related-pill { min-height: 44px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font-size: 13px; }
+.guide-page .related-pill:hover { background: var(--color-hover); border-color: var(--ink); }
+.guide-page .guide-next { min-height: 80px; padding-top: 24px; }
+.guide-page .guide-next strong { font-weight: 500; line-height: 1.7; }
+
+/* Native dialogs retain keyboard behavior and contain their own scrolling. */
+dialog,
+dialog.tool-dialog {
+  max-height: min(88dvh, 900px);
+  padding: 44px 32px 32px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 16px 64px rgb(0 0 0 / 14%);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+dialog { width: min(560px, calc(100% - 48px)); }
+dialog.tool-dialog { width: min(680px, calc(100% - 48px)); }
+dialog[open] { animation: none; }
+dialog::backdrop,
+dialog.tool-dialog::backdrop { background: rgb(37 38 41 / 46%); }
+html:has(dialog[open]),
+body:has(dialog[open]) { overflow: hidden; }
+dialog .dialog-close,
+dialog.tool-dialog .dialog-close { top: 8px; right: 8px; width: 44px; height: 44px; min-height: 44px; border-radius: 0; color: var(--ink); }
+dialog .dialog-close:hover,
+dialog.tool-dialog .dialog-close:hover { background: var(--color-hover); }
+dialog h2,
+dialog.tool-dialog h2 { padding-right: 20px; font: 400 32px/1.3 var(--sans); letter-spacing: -.025em; overflow-wrap: anywhere; }
+dialog .tool-detail-intro { color: var(--muted); font-size: 16px; line-height: 1.9; }
+dialog .tool-detail-section { border-color: var(--line); }
+dialog .tool-detail-section h3 { font-size: 16px; font-weight: 500; }
+dialog .tool-detail-section p { color: var(--muted); font-size: 14px; line-height: 1.95; }
+dialog :is(.tool-detail-actions, .tool-detail-section) .text-link { min-height: 44px; color: var(--ink); }
+
+@media (max-width: 1100px) {
+  :root,
+  body { --page-gutter: 32px; }
+  .header,
+  .product-page .header { gap: 24px; }
+  .header nav,
+  .product-page .header nav { gap: 20px; }
+  .catalog-page .library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; }
+  .catalog-page .library-intro { grid-template-columns: minmax(0, 1fr) 220px; gap: 40px; }
+}
+
+@media (max-width: 800px) {
+  :root,
+  body { --page-gutter: 24px; }
+  .header,
+  .product-page .header { height: 88px; gap: 20px; }
+  .header-note,
+  .product-page .header-note { display: none; }
+  .library-search-row { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; }
+  .library-search-row .product-search { grid-column: 1 / -1; width: 100%; }
+  .sort-label { flex: none; }
+  .sort-label select { flex: 1; max-width: 180px; }
+  .catalog-page .section { padding-block: 40px; }
+  .catalog-page .library-hero { padding-top: 20px; padding-bottom: 0; }
+  .catalog-page .library-intro { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 32px 0 36px; }
+  .catalog-page .library-stats { grid-template-columns: auto auto minmax(0, 1fr); padding: 0; border-left: 0; align-items: center; }
+  .catalog-page .library-intro .library-stats > p { grid-column: 3; justify-self: end; margin: 0; font-size: 11px; }
+  .catalog-page .library-stats strong { font-size: 36px; }
+  .catalog-page .library-grid { gap: 0 28px; }
+  .guide-page .guide-article { margin-top: 28px; }
+  .guide-page .prompt-form { gap: 20px; }
+}
+
+@media (max-width: 520px) {
+  :root,
+  body { --page-gutter: 18px; }
+  .header,
+  .product-page .header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    grid-template-rows: 44px 44px;
+    align-items: center;
+    min-height: 112px;
+    height: auto;
+    gap: 4px 12px;
+    padding: 14px 0 6px;
+  }
+  .header .brand,
+  .product-page .header .brand { grid-column: 1; grid-row: 1; justify-self: start; font-size: 29px; letter-spacing: -1.5px; }
+  .home-page .home-motion-toggle { grid-column: 2; grid-row: 1; justify-self: end; }
+  .header nav,
+  .product-page .header nav { grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; margin: 0; gap: 8px; }
+  .header nav a,
+  .product-page .header nav a,
+  .header nav a[href$="#about"],
+  .product-page .header nav a[href$="#about"] { display: inline-flex; min-width: 0; min-height: 44px; padding: 10px 0; font-size: 12px; }
+  .header nav a::after,
+  .product-page .header nav a::after { left: 10%; width: 80%; bottom: 5px; }
+  .header-note,
+  .product-page .header-note { display: none; }
+  .home-page .library-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .home-page .library-card .tool-actions { flex-direction: row; align-items: center; }
+  .library-search-row { gap: 12px; }
+  .sort-label select { width: 100%; max-width: none; }
+  .library-controls .tool-filters { gap: 6px; padding-block: 12px; }
+  .library-controls .tool-filter { padding-inline: 12px; font-size: 12px; }
+  .library-search-row .favorite-filter { padding-inline: 10px; }
+  .library-options { gap: 4px 18px; font-size: 12px; }
+  .library-options .text-link { margin-left: 0; }
+  .catalog-page .library-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .catalog-page .library-card { padding-block: 24px; }
+  .catalog-page .library-intro h1 { font-size: clamp(36px, 9vw, 44px); }
+  .catalog-page .library-stats { grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+  .catalog-page .library-intro .library-stats > p { grid-column: 1 / -1; justify-self: start; max-width: none; }
+  .catalog-page .library-start { gap: 0 20px; }
+  .catalog-page .library-start > span { flex-basis: 100%; }
+  .catalog-note { align-items: start; margin-block: 22px 16px; }
+  .tool-footnotes { flex-direction: column; gap: 8px; }
+  .guide-page .guide-article { margin: 24px auto 56px; }
+  .guide-page .guide-back { margin-bottom: 24px; }
+  .guide-page .guide-intro { font-size: 16px; }
+  .guide-page .guide-outcome { padding-left: 18px; }
+  .guide-page .guide-steps li { padding-left: 32px; }
+  .guide-page .guide-steps h2 { font-size: 20px; }
+  .guide-page .prompt-builder { padding: 22px 18px; }
+  .guide-page .prompt-builder h2 { font-size: 24px; }
+  .guide-page .prompt-form { grid-template-columns: minmax(0, 1fr); }
+  .guide-page .prompt-heading { flex-wrap: wrap; gap: 12px; }
+  .guide-page .prompt-text { padding: 14px; }
+  .guide-page .guide-next { flex-direction: column; align-items: start; gap: 12px; }
+  dialog,
+  dialog.tool-dialog { width: calc(100% - 28px); max-height: 90dvh; padding: 44px 20px 24px; }
+  dialog h2,
+  dialog.tool-dialog h2 { font-size: 28px; }
+  footer,
+  .product-page footer { align-items: baseline; gap: 8px 16px; font-size: 11px; }
+}

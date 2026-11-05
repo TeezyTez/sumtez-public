@@ -2,11 +2,12 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { createHash } from 'node:crypto';
-import { renderProducts } from './render-products.mjs';
+import { renderProducts, projectName } from './render-products.mjs';
 const assets = fs.existsSync('dist/content.js') ? 'dist' : '.';
 const ctx = {window:{}};
 vm.runInNewContext(fs.readFileSync(`${assets}/content.js`,'utf8'),ctx);
 const all = Object.values(ctx.window.SUMTEZ_CONTENT.products).filter(p=>!p.sample);
+const detailPages = new Set(all.map(p => p.detailUrl));
 const esc = v => String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const home = fs.readFileSync(`${assets}/index.html`,'utf8');
 fs.writeFileSync(`${assets}/index.html`,home.replace(/<!-- products:start -->[\s\S]*?<!-- products:end -->/, `<!-- products:start -->${renderProducts(all)}<!-- products:end -->`));
@@ -16,8 +17,8 @@ for(const [index,p] of all.entries()) {
   const related = all.filter(q=>q!==p).slice(0,2);
   const html = `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f3ec"><meta name="description" content="${esc(p.intro)}"><title>${esc(p.title)} — Sumtez</title><meta property="og:title" content="${esc(p.title)} — Sumtez"><meta property="og:description" content="${esc(p.summary)}"><meta property="og:type" content="website"><meta property="og:url" content="https://sumtez.com/${p.detailUrl}"><link rel="canonical" href="https://sumtez.com/${p.detailUrl}"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css?v=20261023-studio1"><link rel="stylesheet" href="products.css?v=20261023-studio1"></head>
-<body id="top" class="product-page project-case"><a class="skip-link" href="#product-main">跳到产品介绍</a><header class="header"><a class="brand" href="index.html" aria-label="Sumtez 首页">sumtez<span class="brand-dot">*</span></a><nav aria-label="主导航"><a href="index.html#work" aria-current="page">作品</a><a href="tools.html">工具箱</a><a href="index.html#guides">实践笔记</a><a href="index.html#about">关于</a></nav><a class="header-note" href="https://github.com/TeezyTez" target="_blank" rel="noopener noreferrer">GitHub ↗</a></header>
-<main id="product-main"><section class="section product-intro"><a class="text-link" href="index.html#work">← 返回我的产品</a><div class="product-intro-row"><div><p class="eyebrow muted">作品 ${String(index+1).padStart(3,'0')} / ${esc(p.type)}</p><h1>${esc(p.headline[0])}<br><span class="serif-word">${esc(p.headline[1])}</span></h1><p class="product-subtitle">${esc(p.title)} / ${esc(p.repo)}</p></div><div class="product-intro-description"><span class="status-pill">${esc(p.status)}</span><p>${esc(p.intro)}</p><div class="hero-actions"><a class="button primary" href="#getting-started">如何体验 ↓</a><a class="text-link" href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">查看 GitHub ↗</a></div></div></div>
+<body id="top" class="product-page project-case"><a class="skip-link" href="#product-main">跳到产品介绍</a><header class="header"><a class="brand" href="index.html" aria-label="Sumtez 首页">sumtez<span class="brand-dot" aria-hidden="true">.</span></a><nav aria-label="主导航"><a href="index.html#work" aria-current="page">作品</a><a href="tools.html">工具箱</a><a href="index.html#guides">实践笔记</a><a href="index.html#about">关于</a></nav><a class="header-note" href="https://github.com/TeezyTez" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></header>
+<main id="product-main"><section class="section product-intro"><a class="text-link" href="index.html#work">← 返回作品</a><div class="product-intro-row"><div><p class="eyebrow muted">作品 ${String(index+1).padStart(2,'0')} / ${esc(p.type)}</p><h1>${esc(projectName(p))}</h1><p class="product-subtitle">${esc(p.title)}</p></div><div class="product-intro-description"><p class="project-tagline">${esc(p.headline.join(''))}</p><span class="status-pill">${esc(p.status)}</span><p>${esc(p.intro)}</p><div class="hero-actions"><a class="button primary" href="#getting-started">如何体验 <span aria-hidden="true">↓</span></a><a class="text-link" href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer">查看 GitHub ↗</a></div></div></div>
 <div class="project-workflow"><p>从输入到结果 / 工作流程示意</p><ol class="workflow-steps">${p.steps.map(([title,body],i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><h2>${esc(title)}</h2><p>${esc(body)}</p></li>`).join('')}</ol><small>展示当前代码中的主要流程，具体体验以项目版本与配置为准。</small></div><dl class="case-facts"><div><dt>适合谁</dt><dd>${esc(p.audience)}</dd></div><div><dt>当前阶段</dt><dd>${esc(p.status)}</dd></div><div><dt>技术组成</dt><dd>${esc(p.stack)}</dd></div></dl></section>
 <section class="section product-capabilities"><div class="section-heading"><div><p class="eyebrow muted">INSIDE THE PROJECT</p><h2>为具体的问题，做具体的工具。</h2></div></div><div class="capability-grid">${p.sections.map(([title,body],i)=>`<article><span>0${i+1}</span><h3>${esc(title)}</h3><p>${esc(body)}</p></article>`).join('')}</div><aside class="case-limits"><h3>当前版本的边界</h3><p>${esc(p.limits)}</p></aside><p class="case-source">内容依据：<a href="${source}" target="_blank" rel="noopener noreferrer">项目公开源码 ↗</a> · 整理于 2026.10.18。此页为产品介绍，未运行或托管该项目的服务。</p></section>
 <section class="section getting-started" id="getting-started"><div><p class="eyebrow muted">START WITH THE SOURCE</p><h2>从源码开始，<br>了解它如何工作。</h2><p>当前提供公开代码与部署说明，尚未提供已验证的在线试玩或购买入口。按项目说明准备自己的运行环境后，可以进一步探索。</p><a class="button primary" href="${p.sourceUrl}#readme" target="_blank" rel="noopener noreferrer">阅读安装与使用说明 ↗</a></div><ol class="start-steps">${p.start.map(([title,body],i)=>`<li><span>0${i+1}</span><div><h3>${esc(title)}</h3><p>${esc(body)}</p></div></li>`).join('')}</ol></section>
@@ -31,9 +32,18 @@ for (const name of fs.readdirSync(assets).filter(name => name.endsWith('.html'))
   let html = fs.readFileSync(file, 'utf8');
   if (!html.includes('property="og:image"')) html = html.replace('</head>', '<meta property="og:image" content="https://sumtez.com/images/social-card.png"></head>');
   if (!html.includes('name="twitter:card"')) html = html.replace('</head>', '<meta name="twitter:card" content="summary_large_image"></head>');
-  html = html.replace(/<link rel="stylesheet" href="(?:future|future-projects|future-interior|home)\.css(?:\?[^" ]*)?">/g, '');
-  html = html.replace('</head>', name === 'index.html' ? '<link rel="stylesheet" href="home.css"></head>' : '<link rel="stylesheet" href="future.css"><link rel="stylesheet" href="future-projects.css"><link rel="stylesheet" href="future-interior.css"></head>');
+  html = html.replace(/<link rel="stylesheet" href="(?:future|future-projects|future-interior|home|project-detail|site-polish)\.css(?:\?[^" ]*)?">/g, '');
+  const sharedStyle = name === 'index.html' || name === 'tools.html' || name === 'guide.html' || detailPages.has(name);
+  const pageStyles = name === 'index.html' ? '<link rel="stylesheet" href="home.css">'
+    : detailPages.has(name) ? '<link rel="stylesheet" href="project-detail.css">'
+    : sharedStyle ? ''
+    : '<link rel="stylesheet" href="future.css"><link rel="stylesheet" href="future-projects.css"><link rel="stylesheet" href="future-interior.css">';
+  html = html.replace('</head>', `${pageStyles}${sharedStyle ? '<link rel="stylesheet" href="site-polish.css">' : ''}</head>`);
   html = html.replace(/content="#f5f3ec"/g, 'content="#eef0f3"');
+  if (sharedStyle) {
+    html = html.replace(/(<meta name="theme-color" content=")[^"]+(">)/, '$1#f5f5f4$2');
+    html = html.replace(/sumtez<span>\*<\/span>/g, 'sumtez<span aria-hidden="true">.</span>');
+  }
   const socialImage = `${assets}/images/social-card.png`;
   if (fs.existsSync(socialImage)) {
     const hash = createHash('sha256').update(fs.readFileSync(socialImage)).digest('hex').slice(0, 10);

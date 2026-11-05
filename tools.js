@@ -42,6 +42,59 @@
   const empty = document.querySelector('#tool-empty');
   const clear = document.querySelector('#tool-clear');
   const filterContainer = document.querySelector('#tool-categories');
+  // Share only filter choices; favorite IDs remain in the existing local store.
+  if (search) search.name = 'q';
+  if (sort) sort.name = 'sort';
+  if (free) free.name = 'free';
+  if (chinese) chinese.name = 'zh';
+  let urlTimer = 0;
+  let composing = false;
+  const defaultSort = sort?.querySelector('option[value="curated"]') ? 'curated' : sort?.options[0]?.value;
+  function cancelUrlWrite() {
+    window.clearTimeout(urlTimer);
+    urlTimer = 0;
+  }
+  function writeUrl() {
+    cancelUrlWrite();
+    if (featuredOnly || composing) return;
+    const url = new URL(window.location.href);
+    const values = {
+      q: search.value,
+      category: category === 'all' ? '' : category,
+      sort: sort && sort.value !== defaultSort ? sort.value : '',
+      free: free?.checked ? '1' : '',
+      zh: chinese?.checked ? '1' : '',
+      favorites: favoritesOnly ? '1' : ''
+    };
+    Object.entries(values).forEach(([key, value]) => {
+      if (value) url.searchParams.set(key, value);
+      else url.searchParams.delete(key);
+    });
+    if (url.href === window.location.href) return;
+    // Some file/embedded previews disallow history writes; filtering still works.
+    try { window.history.replaceState(window.history.state, '', url); } catch {}
+  }
+  function scheduleUrlWrite() {
+    if (featuredOnly || composing) return;
+    cancelUrlWrite();
+    urlTimer = window.setTimeout(writeUrl, 180);
+  }
+  function restoreUrl() {
+    cancelUrlWrite();
+    if (featuredOnly) return;
+    composing = false;
+    const params = new URL(window.location.href).searchParams;
+    search.value = params.get('q') || '';
+    const requestedCategory = params.get('category');
+    category = categories.some(item => item.id === requestedCategory) ? requestedCategory : 'all';
+    if (sort) {
+      const requestedSort = params.get('sort');
+      sort.value = [...sort.options].some(option => option.value === requestedSort) ? requestedSort : defaultSort;
+    }
+    if (free) free.checked = params.get('free') === '1';
+    if (chinese) chinese.checked = params.get('zh') === '1';
+    favoritesOnly = params.get('favorites') === '1';
+  }
   const buttons = [{id:'all', label:'全部'}, ...categories].map(item => {
     const button = el('button', item.label, 'tool-filter');
     button.type = 'button';
@@ -141,7 +194,7 @@
     return {tool, card, index, text, updateFavorite};
   });
   let currentOrder = "";
-  function filter() {
+  function filter({syncUrl = true} = {}) {
     const words = search.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     const hasFilters = category !== 'all' || favoritesOnly || words.length > 0 || free?.checked || chinese?.checked;
     const isPreview = previewLimit > 0 && !hasFilters && (!sort || sort.value === 'curated');
@@ -185,6 +238,7 @@
     empty.hidden = count !== 0;
     empty.querySelector('h3').textContent = favoritesOnly ? '当前筛选下还没有收藏' : '还没有匹配的工具';
     if (clear) clear.hidden = !hasFilters && (!sort || sort.value === 'curated');
+    if (syncUrl) scheduleUrlWrite();
   }
   function reset() {
     category = 'all'; favoritesOnly = false; search.value = '';
@@ -193,7 +247,17 @@
     if (sort) sort.value = 'curated';
     filter();
   }
-  search.addEventListener('input', filter);
+  search.addEventListener('compositionstart', () => {
+    composing = true;
+    cancelUrlWrite();
+  });
+  search.addEventListener('compositionend', () => {
+    composing = false;
+    filter();
+  });
+  search.addEventListener('input', event => {
+    if (!composing && !event.isComposing) filter();
+  });
   sort?.addEventListener('change', filter);
   free?.addEventListener('change', filter);
   chinese?.addEventListener('change', filter);
@@ -205,11 +269,31 @@
     if (button.dataset.quickQuery) search.value = button.dataset.quickQuery;
     if (button.dataset.quickCategory) category = button.dataset.quickCategory;
     filter();
+    // Commit before the link's hash navigation triggers popstate restoration.
+    writeUrl();
   }));
   window.addEventListener('storage', event => {
     if (event.key !== 'sumtez:favorites' && event.key !== null) return;
     favorites = readFavorites(); cards.forEach(({updateFavorite}) => updateFavorite()); filter();
     if (document.activeElement?.closest('.library-card[hidden]')) focusVisible(favoriteFilter);
   });
-  filter();
+  if (!featuredOnly) {
+    const restoreFilters = () => {
+      restoreUrl();
+      favorites = readFavorites();
+      cards.forEach(({updateFavorite}) => updateFavorite());
+      filter({syncUrl: false});
+    };
+    window.addEventListener('popstate', restoreFilters);
+    window.addEventListener('pageshow', event => {
+      // Initial setup already restored the URL; preserve input made while assets load.
+      if (event.persisted) restoreFilters();
+    });
+    window.addEventListener('pagehide', () => {
+      if (urlTimer) writeUrl();
+      cancelUrlWrite();
+    });
+    restoreUrl();
+  }
+  filter({syncUrl: false});
 })();

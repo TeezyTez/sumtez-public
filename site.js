@@ -16,16 +16,19 @@
     const sections = ['work','tools','guides','about'].map(id => document.getElementById(id)).filter(Boolean);
     let ticking = false;
     const updateLocation = () => {
-      const active = [...sections].reverse().find(section => section.getBoundingClientRect().top <= innerHeight * .4);
+      const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
+      const active = atEnd ? sections.at(-1) : [...sections].reverse().find(section => section.getBoundingClientRect().top <= innerHeight * .4);
       links.forEach(link => {
         if (active && link.hash === '#' + active.id) link.setAttribute('aria-current','location');
         else link.removeAttribute('aria-current');
       });
       ticking = false;
     };
-    window.addEventListener('scroll', () => {
+    const scheduleLocation = () => {
       if (!ticking) { ticking = true; requestAnimationFrame(updateLocation); }
-    }, {passive:true});
+    };
+    window.addEventListener('scroll', scheduleLocation, {passive:true});
+    ['resize', 'pageshow', 'hashchange'].forEach(event => window.addEventListener(event, scheduleLocation));
     updateLocation();
   }
 

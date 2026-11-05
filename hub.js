@@ -5,15 +5,30 @@
   const link = (text, href, cls, external = false) => { const a = el('a', text, cls); a.href = href; if (external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } return a; };
   const guideUrl = id => `guide.html?guide=${encodeURIComponent(id)}`;
   const state = window.SUMTEZ_STATE;
+  const progressRefreshers = [];
+  const readSteps = guide => {
+    const saved = state.read(`steps:${guide.id}`, []);
+    return new Set(Array.isArray(saved) ? saved.filter(i => Number.isInteger(i) && i >= 0 && i < guide.steps.length) : []);
+  };
+  window.addEventListener('storage', event => {
+    if (event.key === null || event.key.startsWith('sumtez:steps:')) progressRefreshers.forEach(refresh => refresh());
+  });
+  window.addEventListener('pageshow', () => progressRefreshers.forEach(refresh => refresh()));
   const guideGrid = document.querySelector('#guide-grid');
   if (guideGrid) {
     guides.forEach(guide => {
       const card = link('', guideUrl(guide.id), `guide-card ${guide.color}`);
       const meta = el('div', '', 'guide-meta'); meta.append(el('span', guide.category), el('span', '↗'));
-      const progress = state.read(`steps:${guide.id}`, []);
-      const done = Array.isArray(progress) ? new Set(progress.filter(i => Number.isInteger(i) && i >= 0 && i < guide.steps.length)).size : 0;
       card.append(meta, el('span', guide.number, 'guide-number'), el('h3', guide.title));
-      if (done) card.append(el('span', `已完成 ${done}/${guide.steps.length}`, 'guide-time'));
+      const badge = el('span', '', 'guide-time');
+      card.append(badge);
+      const refresh = () => {
+        const done = readSteps(guide).size;
+        badge.hidden = !done;
+        badge.textContent = done ? `已完成 ${done}/${guide.steps.length}` : '';
+      };
+      progressRefreshers.push(refresh);
+      refresh();
       guideGrid.append(card);
     });
   }
@@ -30,8 +45,8 @@
   document.querySelector('meta[name="description"]').content = guide.summary;
   article.append(link('← 返回使用指南', 'index.html#guides', 'text-link guide-back'), el('p', `${guide.category} / ${guide.minutes}`, 'eyebrow muted'), el('h1', guide.title), el('p', guide.intro, 'guide-intro'));
   const outcome = el('div', '', 'guide-outcome'); outcome.append(el('strong', '完成后，你会得到'), el('p', guide.outcome)); article.append(outcome);
-  const savedSteps = state.read(`steps:${guide.id}`, []);
-  const completed = new Set(Array.isArray(savedSteps) ? savedSteps.filter(i => Number.isInteger(i) && i >= 0 && i < guide.steps.length) : []);
+  let completed = readSteps(guide);
+  let progressPersisted = true;
   const progress = el('section', '', 'reading-progress');
   const progressLabel = el('span'); progressLabel.setAttribute('role', 'status');
   const progressBar = document.createElement('progress'); progressBar.max = guide.steps.length; progressBar.setAttribute('aria-label', '实践完成进度');
@@ -41,8 +56,16 @@
   const updateProgress = (persist = false) => {
     progressLabel.textContent = completed.size === guide.steps.length ? '本篇实践已完成 ✓' : `实践进度 ${completed.size} / ${guide.steps.length}`;
     progressBar.value = completed.size;
-    if (persist && !state.write(`steps:${guide.id}`, [...completed])) progressNote.textContent = '浏览器未允许本地保存，进度仅在本页有效。';
+    if (persist) progressPersisted = state.write(`steps:${guide.id}`, [...completed]);
+    progressNote.textContent = progressPersisted ? '勾选已完成的步骤；进度仅保存在当前浏览器。' : '浏览器未允许本地保存，进度仅在本页有效。';
   };
+  progressRefreshers.push(() => {
+    // A failed save must not discard progress held only by this page.
+    if (!progressPersisted) return;
+    completed = readSteps(guide);
+    checkboxes.forEach((input, index) => { input.checked = completed.has(index); });
+    updateProgress();
+  });
   restart.addEventListener('click', () => { completed.clear(); checkboxes.forEach(input => { input.checked = false; }); updateProgress(true); });
   progress.append(progressLabel, progressBar, restart, progressNote); article.append(progress);
   updateProgress();
@@ -51,7 +74,13 @@
   guide.steps.forEach(([title, body], index) => {
     const li = el('li'); const label = el('label', '', 'step-complete');
     const input = document.createElement('input'); input.type = 'checkbox'; input.checked = completed.has(index); input.setAttribute('aria-label', `完成第 ${index + 1} 步：${title}`);
-    input.addEventListener('change', () => { if (input.checked) completed.add(index); else completed.delete(index); updateProgress(true); });
+    input.addEventListener('change', () => {
+      const checked = input.checked;
+      if (progressPersisted) completed = readSteps(guide);
+      if (checked) completed.add(index); else completed.delete(index);
+      checkboxes.forEach((checkbox, step) => { checkbox.checked = completed.has(step); });
+      updateProgress(true);
+    });
     checkboxes.push(input); label.append(input, el('span', '这一步完成了'));
     li.append(el('h2', title), el('p', body), label); steps.append(li);
   }); article.append(steps);
