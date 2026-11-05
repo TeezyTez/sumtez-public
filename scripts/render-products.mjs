@@ -17,13 +17,13 @@ export function renderProducts(all) {
     return `<article class="project-stack-card" data-project-name="${esc(projectName(product))}" aria-labelledby="project-title-${number}">
       <div class="project-stack-surface">
         <div class="project-stack-copy">
-          <p class="project-stack-kicker"><span>${number}</span><span>${esc(product.type)}</span></p>
+          <p class="project-stack-kicker">${esc(product.type.replace(/^AINOVEL \/ /, "").replace(/^AGENT \/ /, "智能体 / "))}</p>
           <p class="project-stack-name" aria-hidden="true">${esc(projectName(product))}</p>
           <h2 class="project-stack-title" id="project-title-${number}">${esc(product.title)}</h2>
           <p class="project-stack-description">${esc(description)}</p>
           <div class="project-stack-actions"><a href="${esc(product.detailUrl)}" aria-label="查看 ${esc(projectName(product))} 作品">查看作品 ↗</a><a href="${esc(product.sourceUrl)}" target="_blank" rel="noopener noreferrer" aria-label="查看 ${esc(projectName(product))} 的 GitHub 源码">源码 ↗</a></div>
         </div>
-        <div class="project-stack-art project-stack-art--${kind || 'orbit'}" aria-hidden="true"><span class="project-stack-glyph">${glyph}</span><div class="project-stack-art-label"><span>${label}</span><span>SUMTEZ / ${number}</span></div></div>
+        <div class="project-stack-art project-stack-art--${kind || 'orbit'}" aria-hidden="true"><span class="project-stack-glyph">${glyph}</span></div>
       </div>
     </article>`;
   }).join('\n');

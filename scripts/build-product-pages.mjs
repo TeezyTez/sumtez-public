@@ -32,17 +32,20 @@ for (const name of fs.readdirSync(assets).filter(name => name.endsWith('.html'))
   let html = fs.readFileSync(file, 'utf8');
   if (!html.includes('property="og:image"')) html = html.replace('</head>', '<meta property="og:image" content="https://sumtez.com/images/social-card.png"></head>');
   if (!html.includes('name="twitter:card"')) html = html.replace('</head>', '<meta name="twitter:card" content="summary_large_image"></head>');
-  html = html.replace(/<link rel="stylesheet" href="(?:future|future-projects|future-interior|home|project-detail|site-polish|project-stack)\.css(?:\?[^" ]*)?">/g, '');
+  html = html.replace(/<link rel="stylesheet" href="(?:future|future-projects|future-interior|home|project-detail|site-polish|project-stack|typography)\.css(?:\?[^" ]*)?">/g, '');
   const sharedStyle = name === 'index.html' || name === 'tools.html' || name === 'guide.html' || detailPages.has(name);
   const pageStyles = name === 'index.html' ? '<link rel="stylesheet" href="home.css"><link rel="stylesheet" href="project-stack.css">'
     : detailPages.has(name) ? '<link rel="stylesheet" href="project-detail.css">'
     : sharedStyle ? ''
     : '<link rel="stylesheet" href="future.css"><link rel="stylesheet" href="future-projects.css"><link rel="stylesheet" href="future-interior.css">';
-  html = html.replace('</head>', `${pageStyles}${sharedStyle ? '<link rel="stylesheet" href="site-polish.css">' : ''}</head>`);
+  html = html.replace('</head>', `${pageStyles}${sharedStyle ? '<link rel="stylesheet" href="site-polish.css"><link rel="stylesheet" href="typography.css">' : ''}</head>`);
   html = html.replace(/content="#f5f3ec"/g, 'content="#eef0f3"');
   if (sharedStyle) {
     html = html.replace(/(<meta name="theme-color" content=")[^"]+(">)/, '$1#f5f5f4$2');
     html = html.replace(/sumtez<span>\*<\/span>/g, 'sumtez<span aria-hidden="true">.</span>');
+  }
+  if (sharedStyle && !html.includes('rel="preload" href="fonts/ibm-plex-sans-latin-wght-normal.woff2"')) {
+    html = html.replace('</head>', '<link rel="preload" href="fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin></head>');
   }
   const socialImage = `${assets}/images/social-card.png`;
   if (fs.existsSync(socialImage)) {
